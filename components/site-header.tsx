@@ -30,12 +30,12 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="#top" className="flex items-center gap-2">
           <Image
-            src="/icon.png"
+            src="/icon.webp"
             alt="asiaedits.com Logo"
             width={32}
             height={32}
             priority
-            className="mr-2 h-6 w-6 shrink-0"
+            className="mr-2 size-6 shrink-0"
           />
           <span className="relative flex size-2 shrink-0">
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/60" />
