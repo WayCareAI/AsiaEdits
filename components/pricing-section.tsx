@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { Check, Sparkles } from 'lucide-react'
+import { Check, Rocket, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -16,6 +16,7 @@ const SUBSCRIPTION_FEATURES = [
   'WDF*IDF SEO- & Meta-Setup inklusive',
   'Regelmäßige kleine Content- & Textanpassungen',
   'Monatlich kündbar – keine Vertragsbindung',
+  'Google Business Profile Basis-Setup & GEO-Optimierung inklusive',
 ]
 
 const BUYOUT_FEATURES = [
@@ -24,6 +25,15 @@ const BUYOUT_FEATURES = [
   'Danach nur 19 € / Jahr für Hosting',
   'Volle On-Page SEO-Optimierung (Metas & Schemas)',
   'WDF*IDF-optimierte Texte inklusive',
+  'Schlüsselfertiges Google-Maps-Setup & Profile-Verknüpfung',
+]
+
+const GBP_ADDON_FEATURES = [
+  'Automatisierte 24/7-Bewertungs-Antworten: Jede Google-Rezension wird binnen Minuten professionell, empathisch & SEO-optimiert beantwortet',
+  "Local Keyword & Kategorien-Pflege: Optimierung für maximale Sichtbarkeit bei „in meiner Nähe“-Suchen",
+  'Reputations-Schutz & Deeskalation: Schnelles Handeln bei kritischen Reviews inklusive Vorlagen-Klärung',
+  'Monatliche Google-Posts: 1–2 lokale Beiträge/Aktionen pro Monat für stetige Aktivitäts-Signale an den Google-Algorithmus',
+  'Inklusive QR-Code-Druckvorlage: Fertig gestaltete Kärtchen/Aufsteller zum mühelosen Einsammeln von 5-Sterne-Bewertungen vor Ort',
 ]
 
 export function PricingSection() {
@@ -90,6 +100,57 @@ export function PricingSection() {
           Beide Pakete: On-Page SEO &amp; Meta-Tagging{' '}
           <span className="font-medium text-primary">INKLUSIVE</span>.
         </p>
+
+        <div className="mt-10 rounded-2xl border border-primary/30 bg-gradient-to-b from-primary/[0.08] to-card p-8 sm:p-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-xl">
+              <Badge className="gap-1.5 bg-primary/15 px-3 py-1 text-primary">
+                <Rocket className="size-3" />
+                Add-on
+              </Badge>
+              <h3 className="mt-4 font-heading text-2xl font-semibold text-foreground">
+                Local Google Booster: GBP Care &amp; Review Push
+              </h3>
+              <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
+                Sichere Dir maximale Sichtbarkeit auf der Google-Karte und
+                automatisiere Deine Kunden-Bewertungen auf Autopilot.
+              </p>
+
+              <div className="mt-6 flex flex-wrap items-baseline gap-3">
+                <span className="font-heading text-3xl font-semibold text-foreground">
+                  49 €
+                </span>
+                <span className="text-sm text-muted-foreground">/ Monat</span>
+              </div>
+              <Badge
+                variant="secondary"
+                className="mt-3 gap-1 border-border bg-secondary text-xs text-muted-foreground"
+              >
+                Monatlich kündbar · Perfekt kombinierbar
+              </Badge>
+
+              <ProjectRequestDialog defaultPackage="gbp-care">
+                <Button
+                  size="lg"
+                  className="mt-8 h-11 w-full justify-center text-base bg-primary text-primary-foreground shadow-[0_0_24px_-4px_rgba(56,189,248,0.7)] hover:bg-primary/90 lg:w-auto"
+                >
+                  GBP-Care dazubuchen
+                </Button>
+              </ProjectRequestDialog>
+            </div>
+
+            <ul className="flex flex-1 flex-col gap-3.5 lg:max-w-xl">
+              {GBP_ADDON_FEATURES.map((feature) => (
+                <li key={feature} className="flex items-start gap-3">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span className="text-sm leading-relaxed text-foreground/90">
+                    {feature}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   )
