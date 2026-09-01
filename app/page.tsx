@@ -4,6 +4,7 @@ import { SpeedCheckSection } from '@/components/speed-check-section'
 import { WhySection } from '@/components/why-section'
 import { HowSection } from '@/components/how-section'
 import { PricingSection } from '@/components/pricing-section'
+import { GbpBenefitSection } from '@/components/gbp-benefit-section'
 import { ShowcaseSection } from '@/components/showcase-section'
 import { FaqSection } from '@/components/faq-section'
 import { SiteFooter } from '@/components/site-footer'
@@ -18,6 +19,7 @@ export default function Page() {
         <WhySection />
         <HowSection />
         <PricingSection />
+        <GbpBenefitSection />
         <ShowcaseSection />
         <FaqSection />
       </main>

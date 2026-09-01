@@ -34,6 +34,10 @@ const PACKAGE_OPTIONS = [
     label: 'Smart Subscription (199 € Setup + 39 €/Monat)',
   },
   {
+    value: 'gbp-care',
+    label: 'Local Google Booster Add-on (49 €/Monat)',
+  },
+  {
     value: 'custom',
     label: 'Individuelles Projekt / Beratung',
   },
