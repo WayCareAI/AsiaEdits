@@ -24,7 +24,7 @@ function getVariantIndex(slug: string, variantsCount: number): number {
 export function generatePSEOContent(city?: CityData, industry?: IndustryData): PSEOContent {
   const isCity = !!city
   const slug = city ? city.slug : industry ? industry.slug : 'default'
-  const location = city ? city.name : 'Ihrer Region'
+  const location = city ? city.name : 'Deiner Region'
   const stateStr = city && city.state !== city.name ? ` in ${city.state}` : ''
   const branch = industry ? industry.name : 'Unternehmen'
   const branchPlural = industry ? industry.pluralName : 'Unternehmen'
@@ -45,30 +45,22 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
     'Konvertierungsrate',
   ]
 
-  // METAS (Deterministic Variations to prevent Duplicate Content)
+  // METAS (Exact-Match Keyword Formulas: "Webdesign für [Branche]" / "Webdesign [Stadt]")
   const metaTitleOptions = isCity
     ? [
-        `Webdesign & SEO in ${location} | High-Speed Websites | Asia Edits`,
-        `Webagentur für ${location}${stateStr} | PageSpeed 90+ & SEO Local Booster`,
-        `Website erstellen lassen in ${location} | High-Performance & SEO`,
+        `Webdesign ${location} | High-Speed Website (90+)`,
+        `Webdesign ${location} | SEO Local Booster Package`,
+        `Webdesign & SEO in ${location} | Asia Edits`,
       ]
     : [
-        `Website & SEO für ${branchPlural} | High-Speed & KI | Asia Edits`,
-        `Webentwicklung für ${branchPlural} | PageSpeed 90+ Garantiert`,
-        `Top Google Rankings für ${branchPlural} | SEO Local Booster`,
+        `Webdesign für ${branchPlural} | PageSpeed 90+ & SEO`,
+        `Webdesign für ${branchPlural} | SEO Local Booster`,
+        `Webdesign & SEO für ${branchPlural} | Asia Edits`,
       ]
 
-  const metaDescOptions = isCity
-    ? [
-        `High-Performance Webdesign in ${location}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Festpreis-Angebot anfordern!`,
-        `Moderne Websites für Unternehmen in ${location}. Maximale Ladezeit-Performance, barrierefreies Webdesign & regionale SEO-Dominanz ohne Agenturaufschlag.`,
-        `Sichern Sie sich den digitalen Vorsprung in ${location}${stateStr}. Sub-Second Webentwicklung mit Next.js & gezieltes Google Maps Geo-Targeting.`,
-      ]
-    : [
-        `Spezialisierte Webentwicklung für ${branchPlural}. PageSpeed 90+ garantiert, lückenloses SEO & exklusiver SEO Local Booster. Jetzt Angebot sichern!`,
-        `Neukundengewinnung für ${branchPlural} über blitzschnelle Webseiten. Perfekte Core Web Vitals, Schema.org Markup & lokales WDF*IDF Ranking.`,
-        `Mehr digitale Anfragen für ${branchPlural}: Wir bauen maßgeschneiderte High-Speed-Websites mit garantiertem Mobile PageSpeed 90+.`,
-      ]
+  const metaDescription = isCity
+    ? `Professionelles Webdesign in ${location}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot anfordern!`
+    : `Professionelles Webdesign für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
 
   // GOLDEN CIRCLE: WHY
   const whyOptions = isCity
@@ -85,15 +77,15 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
 
   // GOLDEN CIRCLE: HOW
   const howOptions = [
-    `Wir von Asia Edits bauen Ihre digitale Präsenz auf Basis des Next.js App Routers. Das garantiert einen Mobile PageSpeed Score von 90+, LCP-Ladezeiten unter 1,0 Sekunde und lückenlose Barrierefreiheit. Auf Wunsch voll integriert mit Multi-Language-Funktion (DE/EN).`,
-    `Asia Edits setzt auf moderne Headless-Architekturen statt überladener Baukastensysteme. Durch schlanken Code erreichen wir für Ihre Seite den garantierten PageSpeed-Score von 90+ auf Mobilgeräten. Komplett optimiert für exzellente Core Web Vitals und optionale Mehrsprachigkeit (DE/EN).`,
-    `Unsere technische Lösung eliminiert unnötigen Ballast: Auf Basis neuester Next.js-Technologie entwickeln wir extrem schnelle Webseiten mit garantierten 90+ Punkten im Google PageSpeed Insights Test – inklusive zukunftssicherer Multi-Language-Option.`,
+    `Wir von Asia Edits bauen Deine digitale Präsenz auf Basis des Next.js App Routers. Das garantiert einen Mobile PageSpeed Score von 90+, LCP-Ladezeiten unter 1,0 Sekunde und lückenlose Barrierefreiheit. Auf Wunsch voll integriert mit Multi-Language-Funktion (DE/EN).`,
+    `Asia Edits setzt auf moderne Headless-Architekturen statt überladener Baukastensysteme. Durch schlanken Code erreichen wir für Deine Seite den garantierten PageSpeed-Score von 90+ auf Mobilgeräten. Komplett optimiert für exzellente Core Web Vitals und optionale Mehrsprachigkeit (DE/EN).`,
+    `Unsere technische Lösung eliminiert unnötigen Ballast: Auf Basis neuester Next.js-Technologie entwickeln wir extrem schnelle Webseiten für Deinen Auftritt mit garantierten 90+ Punkten im Google PageSpeed Insights Test – inklusive zukunftssicherer Multi-Language-Option.`,
   ]
 
   // GOLDEN CIRCLE: WHAT
   const whatText = isCity
-    ? `Sie erhalten ein maßgeschneidertes Komplettsystem für Ihren Standort in ${location}: Eine extrem schnelle Website, technisches SEO und unser exklusives SEO Local Booster Package für maximale regionale Präsenz.`
-    : `Sie erhalten ein schlüsselfertiges System für ${branchPlural}: Von der mobilen High-Speed-Plattform über nischenspezifische WDF*IDF-Texte bis hin zum SEO Local Booster Package.`
+    ? `Du erhältst ein maßgeschneidertes Komplettsystem für Deinen Standort in ${location}: Eine extrem schnelle Website, technisches SEO und unser exklusives SEO Local Booster Package für maximale regionale Präsenz.`
+    : `Du erhältst ein schlüsselfertiges System für ${branchPlural}: Von der mobilen High-Speed-Plattform über nischenspezifische WDF*IDF-Texte bis hin zum SEO Local Booster Package.`
 
   const boosterTitle = `SEO Local Booster Package für ${isCity ? location : branchPlural}`
 
@@ -110,10 +102,8 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
 
   return {
     metaTitle: metaTitleOptions[variant],
-    metaDescription: metaDescOptions[variant],
-    heroTitle: isCity
-      ? `High-Performance Webdesign & SEO in ${location}`
-      : `Webentwicklung & SEO-Dominanz für ${branchPlural}`,
+    metaDescription,
+    heroTitle: isCity ? `Webdesign & SEO in ${location}` : `Webdesign & SEO für ${branchPlural}`,
     heroSubtitle: `Garantierter Mobile PageSpeed 90+ • LCP unter 1,0 Sekunde • Inklusive SEO Local Booster Package`,
     whyText: whyOptions[variant],
     howText: howOptions[variant],
