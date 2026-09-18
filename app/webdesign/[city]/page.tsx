@@ -5,7 +5,7 @@ import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
 import { PseoFeatureGrid } from '@/components/pseo/pseo-feature-grid'
-import { PseoGbpCard } from '@/components/pseo/pseo-gbp-card'
+import { PseoLocalBoosterCard } from '@/components/pseo/pseo-local-booster-card'
 import { PseoLinksGrid } from '@/components/pseo/pseo-links-grid'
 import { PseoLeadForm } from '@/components/pseo/pseo-lead-form'
 
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = `Webdesign ${city.name} 2026: Schnelle Websites ab 199 € | asiaedits`
-  const description = `Professionelle Website erstellen lassen in ${city.name}, ${city.state}. 90+ PageSpeed-Garantie, Local SEO & Google Business Profile Booster.`
+  const description = `Professionelle Website erstellen lassen in ${city.name}, ${city.state}. Garantierter Mobile PageSpeed 90+, Local SEO & SEO Local Booster Package für regionale Sichtbarkeit.`
 
   return {
     title,
@@ -91,14 +91,14 @@ export default async function WebdesignCityPage({ params }: PageProps) {
           eyebrow={`Webdesign ${regionLabel} ${city.name}`}
           title={`Moderne Website für Unternehmen in ${city.name}`}
           painPoint={`Ohne eine schnelle, lokal auffindbare Website verlieren Betriebe in ${city.name} und Umgebung täglich Anfragen an besser sichtbare Wettbewerber.`}
-          badges={[city.name, city.state, regionLabel, '90+ PageSpeed', 'Local SEO']}
+          badges={[city.name, city.state, regionLabel, 'Garantierter Mobile PageSpeed 90+', 'Local SEO']}
         />
         <PseoFeatureGrid />
-        <PseoGbpCard
-          heading={`Local Booster für Dein Google-Profil in ${city.name}`}
-          focus={`Wir verknüpfen Deine neue Website nahtlos mit Deinem Google Business Profile, damit Du in ${
+        <PseoLocalBoosterCard
+          heading={`SEO Local Booster Package für ${city.name}`}
+          focus={`Wir bringen Deine Website in ${
             city.name === city.state ? city.name : `${city.name} und ${city.state}`
-          } bei lokalen Suchanfragen ganz oben stehst.`}
+          } mit strukturierten Daten und regionalem Entity-Mapping in den Local Pack Top-3 bei lokalen Suchanfragen.`}
         />
         <PseoLinksGrid
           heading={`Webdesign in der Region ${city.name}`}

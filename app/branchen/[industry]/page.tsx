@@ -5,7 +5,7 @@ import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
 import { PseoFeatureGrid } from '@/components/pseo/pseo-feature-grid'
-import { PseoGbpCard } from '@/components/pseo/pseo-gbp-card'
+import { PseoLocalBoosterCard } from '@/components/pseo/pseo-local-booster-card'
 import { PseoLinksGrid } from '@/components/pseo/pseo-links-grid'
 import { PseoLeadForm } from '@/components/pseo/pseo-lead-form'
 
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = `Website für ${industry.pluralName} 2026: Mehr Anfragen ab 199 € | asiaedits`
-  const description = `Professionelle Website für ${industry.pluralName} erstellen lassen. 90+ PageSpeed-Garantie, Local SEO & Google Business Profile Booster. ${industry.heroPainPoint}.`
+  const description = `Professionelle Website für ${industry.pluralName} erstellen lassen. Garantierter Mobile PageSpeed 90+, Local SEO & SEO Local Booster Package für regionale Sichtbarkeit. ${industry.heroPainPoint}.`
 
   return {
     title,
@@ -87,8 +87,8 @@ export default async function BranchenIndustryPage({ params }: PageProps) {
           badges={industry.keywords}
         />
         <PseoFeatureGrid />
-        <PseoGbpCard
-          heading={`Local Booster speziell für ${industry.pluralName}`}
+        <PseoLocalBoosterCard
+          heading={`SEO Local Booster Package speziell für ${industry.pluralName}`}
           focus={industry.localBoosterFocus}
         />
         <PseoLinksGrid

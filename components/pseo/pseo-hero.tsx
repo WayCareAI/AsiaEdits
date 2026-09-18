@@ -1,4 +1,4 @@
-import { ArrowRight, AlertTriangle } from 'lucide-react'
+import { ArrowRight, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 
 interface PseoHeroProps {
@@ -36,6 +36,20 @@ export function PseoHero({ eyebrow, title, painPoint, badges }: PseoHeroProps) {
                 {badge}
               </span>
             ))}
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600">
+              <span className="relative flex size-2 shrink-0">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500/60" />
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+              </span>
+              LCP &lt; 1.0s
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600">
+              <CheckCircle2 className="size-3.5" />
+              Core Web Vitals: alle grün
+            </span>
           </div>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">

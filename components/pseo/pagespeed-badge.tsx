@@ -12,7 +12,7 @@ export function PageSpeedBadge({ className }: { className?: string }) {
         <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500/60" />
         <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
       </span>
-      <span>Live PageSpeed: 98/100</span>
+      <span>Garantierter Mobile PageSpeed 90+</span>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { PageSpeedBadge } from '@/components/pseo/pagespeed-badge'
 const FEATURES = [
   {
     icon: Gauge,
-    title: '90+ PageSpeed Score',
+    title: 'Garantierter Mobile PageSpeed 90+',
     description:
       'Next.js Rendering & Bild-Optimierung sorgen für Ladezeiten unter 1 Sekunde, garantiert.',
   },
