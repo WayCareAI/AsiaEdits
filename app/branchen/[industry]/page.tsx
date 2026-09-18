@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getIndustryBySlug, getAllIndustrySlugs, ALL_CITIES } from '@/src/data/pseoDatabase'
+import { generatePSEOContent } from '@/src/lib/pseoContentEngine'
 import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
+import { PseoContentSection } from '@/components/pseo/pseo-content-section'
 import { PseoFeatureGrid } from '@/components/pseo/pseo-feature-grid'
 import { PseoLocalBoosterCard } from '@/components/pseo/pseo-local-booster-card'
 import { PseoLinksGrid } from '@/components/pseo/pseo-links-grid'
@@ -25,19 +27,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Seite nicht gefunden | asiaedits.com' }
   }
 
-  const title = `Website für ${industry.pluralName} 2026: Mehr Anfragen ab 199 € | asiaedits`
-  const description = `Professionelle Website für ${industry.pluralName} erstellen lassen. Garantierter Mobile PageSpeed 90+, Local SEO & SEO Local Booster Package für regionale Sichtbarkeit. ${industry.heroPainPoint}.`
+  const content = generatePSEOContent(undefined, industry)
 
   return {
-    title,
-    description,
+    title: content.metaTitle,
+    description: content.metaDescription,
     keywords: industry.keywords,
     alternates: {
       canonical: `https://www.asiaedits.com/branchen/${industry.slug}`,
     },
     openGraph: {
-      title,
-      description,
+      title: content.metaTitle,
+      description: content.metaDescription,
       url: `https://www.asiaedits.com/branchen/${industry.slug}`,
       siteName: 'asiaedits.com',
       images: [
@@ -53,8 +54,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title,
-      description,
+      title: content.metaTitle,
+      description: content.metaDescription,
       images: ['/opengraph-image.png'],
     },
   }
@@ -67,6 +68,8 @@ export default async function BranchenIndustryPage({ params }: PageProps) {
   if (!industry) {
     notFound()
   }
+
+  const content = generatePSEOContent(undefined, industry)
 
   const featuredCityItems = ALL_CITIES.filter((c) => c.regionType === 'city')
     .slice(0, 6)
@@ -82,15 +85,24 @@ export default async function BranchenIndustryPage({ params }: PageProps) {
       <main>
         <PseoHero
           eyebrow={`Webdesign für ${industry.pluralName}`}
-          title={`Website für ${industry.pluralName}, die neue Kunden bringt`}
-          painPoint={industry.heroPainPoint}
-          badges={industry.keywords}
+          title={content.heroTitle}
+          subtitle={content.heroSubtitle}
+          whyText={content.whyText}
+          badges={content.wdfKeywords}
+        />
+        <PseoContentSection
+          id="unsere-loesung"
+          eyebrow="Wie wir es lösen"
+          heading="Unsere technische Lösung"
+          text={content.howText}
         />
         <PseoFeatureGrid />
-        <PseoLocalBoosterCard
-          heading={`SEO Local Booster Package speziell für ${industry.pluralName}`}
-          focus={industry.localBoosterFocus}
+        <PseoContentSection
+          eyebrow="Was Du bekommst"
+          heading="Dein Komplettpaket"
+          text={content.whatText}
         />
+        <PseoLocalBoosterCard title={content.boosterTitle} features={content.boosterFeatures} />
         <PseoLinksGrid
           heading={`${industry.pluralName} Websites in diesen Städten`}
           description={`Wir erstellen High-Speed Websites für ${industry.pluralName} auch in diesen Regionen.`}

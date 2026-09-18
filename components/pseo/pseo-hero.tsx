@@ -4,11 +4,12 @@ import Link from 'next/link'
 interface PseoHeroProps {
   eyebrow: string
   title: string
-  painPoint: string
+  subtitle: string
+  whyText: string
   badges: string[]
 }
 
-export function PseoHero({ eyebrow, title, painPoint, badges }: PseoHeroProps) {
+export function PseoHero({ eyebrow, title, subtitle, whyText, badges }: PseoHeroProps) {
   return (
     <section className="border-b border-gray-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -19,11 +20,14 @@ export function PseoHero({ eyebrow, title, painPoint, badges }: PseoHeroProps) {
           <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
             {title}
           </h1>
+          <p className="mt-4 text-pretty text-base leading-relaxed text-gray-600 sm:text-lg">
+            {subtitle}
+          </p>
 
           <div className="mt-6 flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
             <AlertTriangle className="mt-0.5 size-5 shrink-0 text-gray-400" />
             <p className="text-pretty text-sm leading-relaxed text-gray-600">
-              {painPoint}
+              {whyText}
             </p>
           </div>
 

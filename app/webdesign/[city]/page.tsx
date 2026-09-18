@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getCityBySlug, getAllCitySlugs } from '@/src/data/pseoDatabase'
+import { generatePSEOContent } from '@/src/lib/pseoContentEngine'
 import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
+import { PseoContentSection } from '@/components/pseo/pseo-content-section'
 import { PseoFeatureGrid } from '@/components/pseo/pseo-feature-grid'
 import { PseoLocalBoosterCard } from '@/components/pseo/pseo-local-booster-card'
 import { PseoLinksGrid } from '@/components/pseo/pseo-links-grid'
@@ -25,18 +27,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Seite nicht gefunden | asiaedits.com' }
   }
 
-  const title = `Webdesign ${city.name} 2026: Schnelle Websites ab 199 € | asiaedits`
-  const description = `Professionelle Website erstellen lassen in ${city.name}, ${city.state}. Garantierter Mobile PageSpeed 90+, Local SEO & SEO Local Booster Package für regionale Sichtbarkeit.`
+  const content = generatePSEOContent(city)
 
   return {
-    title,
-    description,
+    title: content.metaTitle,
+    description: content.metaDescription,
     alternates: {
       canonical: `https://www.asiaedits.com/webdesign-${city.slug}`,
     },
     openGraph: {
-      title,
-      description,
+      title: content.metaTitle,
+      description: content.metaDescription,
       url: `https://www.asiaedits.com/webdesign-${city.slug}`,
       siteName: 'asiaedits.com',
       images: [
@@ -52,8 +53,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title,
-      description,
+      title: content.metaTitle,
+      description: content.metaDescription,
       images: ['/opengraph-image.png'],
     },
   }
@@ -66,6 +67,8 @@ export default async function WebdesignCityPage({ params }: PageProps) {
   if (!city) {
     notFound()
   }
+
+  const content = generatePSEOContent(city)
 
   const regionLabel =
     city.regionType === 'city'
@@ -89,17 +92,24 @@ export default async function WebdesignCityPage({ params }: PageProps) {
       <main>
         <PseoHero
           eyebrow={`Webdesign ${regionLabel} ${city.name}`}
-          title={`Moderne Website für Unternehmen in ${city.name}`}
-          painPoint={`Ohne eine schnelle, lokal auffindbare Website verlieren Betriebe in ${city.name} und Umgebung täglich Anfragen an besser sichtbare Wettbewerber.`}
-          badges={[city.name, city.state, regionLabel, 'Garantierter Mobile PageSpeed 90+', 'Local SEO']}
+          title={content.heroTitle}
+          subtitle={content.heroSubtitle}
+          whyText={content.whyText}
+          badges={content.wdfKeywords}
+        />
+        <PseoContentSection
+          id="unsere-loesung"
+          eyebrow="Wie wir es lösen"
+          heading="Unsere technische Lösung"
+          text={content.howText}
         />
         <PseoFeatureGrid />
-        <PseoLocalBoosterCard
-          heading={`SEO Local Booster Package für ${city.name}`}
-          focus={`Wir bringen Deine Website in ${
-            city.name === city.state ? city.name : `${city.name} und ${city.state}`
-          } mit strukturierten Daten und regionalem Entity-Mapping in den Local Pack Top-3 bei lokalen Suchanfragen.`}
+        <PseoContentSection
+          eyebrow="Was Du bekommst"
+          heading="Dein Komplettpaket"
+          text={content.whatText}
         />
+        <PseoLocalBoosterCard title={content.boosterTitle} features={content.boosterFeatures} />
         <PseoLinksGrid
           heading={`Webdesign in der Region ${city.name}`}
           description="Wir erstellen High-Speed Websites auch für diese Städte und Gemeinden in der Nähe."
