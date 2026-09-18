@@ -1,36 +1,35 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
+import { getAllCitySlugs, getAllIndustrySlugs } from "@/src/data/pseoDatabase"
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+const baseUrl = "https://asiaedits.com"
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticPages: MetadataRoute.Sitemap = [
     {
-      url: 'https://asiaedits.com',
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: 'https://asiaedits.com/wordpress-alternative',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://asiaedits.com/website-fuer-handwerker',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://asiaedits.com/website-fuer-friseure',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://asiaedits.com/website-fuer-zahnaerzte',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 1.0,
     },
   ]
+
+  // Dynamic city pages (/webdesign/[city])
+  const citySlugs = getAllCitySlugs()
+  const cityPages: MetadataRoute.Sitemap = citySlugs.map((slug) => ({
+    url: `${baseUrl}/webdesign/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }))
+
+  // Dynamic industry pages (/branchen/[industry])
+  const industrySlugs = getAllIndustrySlugs()
+  const industryPages: MetadataRoute.Sitemap = industrySlugs.map((slug) => ({
+    url: `${baseUrl}/branchen/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }))
+
+  return [...staticPages, ...cityPages, ...industryPages]
 }

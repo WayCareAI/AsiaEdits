@@ -6,6 +6,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/webdesign-:city',
+        destination: '/webdesign/:city',
+      },
+    ]
+  },
   async headers() {
     return [
       {
