@@ -12,6 +12,14 @@ const nextConfig = {
         source: '/webdesign-:city',
         destination: '/webdesign/:city',
       },
+      {
+        source: '/branchen/webdesign-:industry',
+        destination: '/branchen/webdesign/:industry',
+      },
+      {
+        source: '/branchen/website-:industry',
+        destination: '/branchen/website/:industry',
+      },
     ]
   },
   async headers() {

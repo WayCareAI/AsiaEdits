@@ -21,8 +21,13 @@ function getVariantIndex(slug: string, variantsCount: number): number {
   return Math.abs(hash) % variantsCount
 }
 
-export function generatePSEOContent(city?: CityData, industry?: IndustryData): PSEOContent {
+export function generatePSEOContent(
+  city?: CityData,
+  industry?: IndustryData,
+  targetKeywordType: 'webdesign' | 'website' = 'webdesign',
+): PSEOContent {
   const isCity = !!city
+  const isWebsiteVariant = !isCity && targetKeywordType === 'website'
   const slug = city ? city.slug : industry ? industry.slug : 'default'
   const location = city ? city.name : 'Deiner Region'
   const stateStr = city && city.state !== city.name ? ` in ${city.state}` : ''
@@ -45,22 +50,22 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
     'Konvertierungsrate',
   ]
 
-  // METAS (Exact-Match Keyword Formulas: "Webdesign für [Branche]" / "Webdesign [Stadt]")
+  // METAS (Exact-Match Keyword Formulas: "Webdesign für [Branche]" / "Website für [Branche]" / "Webdesign [Stadt]")
   const metaTitleOptions = isCity
     ? [
         `Webdesign ${location} | High-Speed Website (90+)`,
         `Webdesign ${location} | SEO Local Booster Package`,
         `Webdesign & SEO in ${location} | Asia Edits`,
       ]
-    : [
-        `Webdesign für ${branchPlural} | PageSpeed 90+ & SEO`,
-        `Webdesign für ${branchPlural} | SEO Local Booster`,
-        `Webdesign & SEO für ${branchPlural} | Asia Edits`,
-      ]
+    : isWebsiteVariant
+      ? [`Website für ${branchPlural} | PageSpeed 90+ & Local SEO`]
+      : [`Webdesign für ${branchPlural} | PageSpeed 90+ & Local SEO`]
 
   const metaDescription = isCity
     ? `Professionelles Webdesign in ${location}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot anfordern!`
-    : `Professionelles Webdesign für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
+    : isWebsiteVariant
+      ? `Professionelle Website für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
+      : `Professionelles Webdesign für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
 
   // GOLDEN CIRCLE: WHY
   const whyOptions = isCity
@@ -85,7 +90,9 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
   // GOLDEN CIRCLE: WHAT
   const whatText = isCity
     ? `Du erhältst ein maßgeschneidertes Komplettsystem für Deinen Standort in ${location}: Eine extrem schnelle Website, technisches SEO und unser exklusives SEO Local Booster Package für maximale regionale Präsenz.`
-    : `Du erhältst ein schlüsselfertiges System für ${branchPlural}: Von der mobilen High-Speed-Plattform über nischenspezifische WDF*IDF-Texte bis hin zum SEO Local Booster Package.`
+    : isWebsiteVariant
+      ? `Du erhältst eine schlüsselfertige High-Speed Website für ${branchPlural}: Eine blitzschnelle Homepage, technisches SEO und unser exklusives SEO Local Booster Package für maximale regionale Präsenz.`
+      : `Du erhältst ein schlüsselfertiges System für ${branchPlural}: Von der mobilen High-Speed-Plattform über nischenspezifische WDF*IDF-Texte bis hin zum SEO Local Booster Package.`
 
   const boosterTitle = `SEO Local Booster Package für ${isCity ? location : branchPlural}`
 
@@ -101,9 +108,13 @@ export function generatePSEOContent(city?: CityData, industry?: IndustryData): P
     : [...techTerms, ...seoTerms]
 
   return {
-    metaTitle: metaTitleOptions[variant],
+    metaTitle: isCity ? metaTitleOptions[variant] : metaTitleOptions[0],
     metaDescription,
-    heroTitle: isCity ? `Webdesign & SEO in ${location}` : `Webdesign & SEO für ${branchPlural}`,
+    heroTitle: isCity
+      ? `Webdesign & SEO in ${location}`
+      : isWebsiteVariant
+        ? `Website & SEO für ${branchPlural}`
+        : `Webdesign & SEO für ${branchPlural}`,
     heroSubtitle: `Garantierter Mobile PageSpeed 90+ • LCP unter 1,0 Sekunde • Inklusive SEO Local Booster Package`,
     whyText: whyOptions[variant],
     howText: howOptions[variant],

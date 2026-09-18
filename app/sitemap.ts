@@ -22,14 +22,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // Dynamic industry pages (/branchen/[industry])
+  // Dynamic industry pages (/branchen/webdesign-[industry] and /branchen/website-[industry])
   const industrySlugs = getAllIndustrySlugs()
-  const industryPages: MetadataRoute.Sitemap = industrySlugs.map((slug) => ({
-    url: `${baseUrl}/branchen/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }))
+  const industryPages: MetadataRoute.Sitemap = industrySlugs.flatMap((slug) => [
+    {
+      url: `${baseUrl}/branchen/webdesign-${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/branchen/website-${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+  ])
 
   return [...staticPages, ...cityPages, ...industryPages]
 }
