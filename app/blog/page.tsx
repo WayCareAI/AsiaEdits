@@ -150,6 +150,14 @@ const POSTS = [
   meta: '8 min Lesezeit',
   },
   {
+    href: '/blog/b2c-datenschutz-trust-ux',
+    category: 'B2C Trust & Privacy',
+    title: 'B2C Datenschutz & Trust UX: Vertrauen aufbauen',
+    description:
+      'Warum aggressive Cookie-Banner, versteckte Abbruch-Klauseln und überladene Pop-ups Kunden vertreiben und wie ehrliches Design Kaufentscheidungen beschleunigt.',
+    meta: '7 min Lesezeit',
+  },
+  {
   href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
