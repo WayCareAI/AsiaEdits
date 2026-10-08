@@ -52,7 +52,7 @@ export function AboutBody() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <Section>
-        <H2>WHY – Warum wir tun, was wir tun: Berufung statt Dienstleistung</H2>
+        <H2>Unsere Überzeugung: Berufung statt Dienstleistung</H2>
         <P>
           Wir haben das große Glück, unsere absolute Leidenschaft als Beruf
           ausüben zu können. Für uns ist Web-Engineering und Digital-Strategie
@@ -71,8 +71,7 @@ export function AboutBody() {
 
       <Section>
         <H2>
-          HOW – Die Lücke im Markt: Was wir anders machen als klassische
-          Agenturen
+          Die Lücke im Markt: Was wir anders machen als klassische Agenturen
         </H2>
         <P>
           Da wir jahrelang in großen Agenturen gearbeitet, eigenständig
@@ -104,7 +103,7 @@ export function AboutBody() {
       </Section>
 
       <Section>
-        <H2>WHAT – Unser Fundament: 15+ Jahre High-End Digital-Expertise</H2>
+        <H2>Unser Fundament: 15+ Jahre High-End Digital-Expertise</H2>
         <P>
           Hinter AsiaEdits steht tiefes Know-how aus prägenden Stationen der
           digitalen Landschaft:
