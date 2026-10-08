@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/b2b-englischer-suchmarkt/article-hero'
 import { ArticleBody } from '@/components/blog/b2b-englischer-suchmarkt/article-body'
 import { AuditCta } from '@/components/blog/b2b-englischer-suchmarkt/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "In deutschen Metropolen suchen internationale Entscheider zunehmend auf Englisch.",
+  "Dieser Suchmarkt ist kaufkräftig und wird von B2B-Anbietern bisher kaum bedient.",
+  "Eine saubere internationale SEO-Architektur trennt Sprachversionen ohne Duplicate Content.",
+  "Wer früh englische Landingpages aufbaut, sichert sich Rankings mit geringem Wettbewerb.",
+]
+
 export default function B2BEnglischerSuchmarktPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="b2b-englischer-suchmarkt-metropolen" category="pseo" />
         <AuditCta />
       </main>
       <SiteFooter />

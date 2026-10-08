@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/llm-readiness-agentic-browsing/article-hero'
 import { ArticleBody } from '@/components/blog/llm-readiness-agentic-browsing/article-body'
 import { AuditCta } from '@/components/blog/llm-readiness-agentic-browsing/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Automatisierte Beschaffungssysteme und KI-Agenten wählen Anbieter anhand strukturierter Daten.",
+  "Vollständiges JSON-LD nach Schema.org macht Ihre Entitäten maschinenlesbar.",
+  "Parsing-Zeiten unter 200 ms erhöhen die Chance auf Zitation in KI-Antworten.",
+  "API-nahe Frontend-Architekturen sind die Basis für Sichtbarkeit bei ChatGPT, Perplexity und Google AI.",
+]
+
 export default function LlmReadinessAgenticBrowsingPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="llm-readiness-agentic-browsing" category="performance" />
         <AuditCta />
       </main>
       <SiteFooter />

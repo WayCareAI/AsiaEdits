@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/pseo-b2b/article-hero'
 import { ArticleBody } from '@/components/blog/pseo-b2b/article-body'
 import { AuditCta } from '@/components/blog/pseo-b2b/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Technologie und semantisches Varianz-Engineering skalieren Reichweite ohne Qualitätsverlust.",
+  "Automatisierte regionale Landingpages erschließen bis zu 100x mehr Suchintentionen.",
+  "Dynamische Textvarianz verhindert Duplicate Content auf Skalierungsebene.",
+  "Der Long-Tail liefert deutlich mehr Gesamtsichtbarkeit und qualifizierte Anfragen.",
+]
+
 export default function ProgrammaticSeoB2bPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="programmatic-seo-b2b-skalieren" category="pseo" />
         <AuditCta />
       </main>
       <SiteFooter />

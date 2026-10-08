@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/google-local-pack-dominanz/article-hero'
 import { ArticleBody } from '@/components/blog/google-local-pack-dominanz/article-body'
 import { AuditCta } from '@/components/blog/google-local-pack-dominanz/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Strukturierte Geodaten nach Schema.org machen Ihren Standort maschinenlesbar.",
+  "Anrufe und Routen-Klicks direkt im Snippet steigern die CTR um bis zu 120 %.",
+  "Zielgerichtetes Geo-Targeting bringt B2B-Anbieter ins Kartenpaket.",
+  "Latenzfreie mobile Seiten sind Voraussetzung für Local-Pack-Sichtbarkeit.",
+]
+
 export default function GoogleLocalPackDominanzPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="google-local-pack-dominanz" category="local" />
         <AuditCta />
       </main>
       <SiteFooter />
