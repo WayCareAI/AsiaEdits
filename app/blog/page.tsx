@@ -45,6 +45,15 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/b2b-englischer-suchmarkt-metropolen',
+    category: 'B2B Strategie & SEO',
+    title:
+      'Der unterschätzte B2B-Markt: Englische Suchanfragen in Metropolen',
+    description:
+      'Wie B2B-Dienstleister in deutschen Großstädten mit internationaler SEO-Architektur kaufkräftige Zielgruppen erschließen.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
