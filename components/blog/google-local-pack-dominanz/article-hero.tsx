@@ -22,8 +22,8 @@ const METRICS = [
   {
     icon: Eye,
     label: 'Sichtbarkeit',
-    value: 'Top-3 Garantie',
-    description: 'Im begehrten Google Local Pack',
+    value: 'Top SERP Garantie',
+    description: 'Maximale Sichtbarkeit in den Suchergebnissen & im Local Pack',
   },
   {
     icon: MousePointerClick,
