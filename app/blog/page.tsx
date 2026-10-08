@@ -54,6 +54,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/barrierefreiheit-seo-booster',
+    category: 'SEO & Accessibility',
+    title: 'Barrierefreiheit als SEO-Booster: Rankings 2026 steigern',
+    description:
+      'Wie barrierefreies Webdesign, Kontrast-Optimierung und Audio-Features Nutzersignale maximieren und Google-Vertrauen aufbauen.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
