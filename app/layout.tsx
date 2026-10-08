@@ -121,6 +121,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
+      data-scroll-behavior="smooth"
       className={`dark relative w-full max-w-full overflow-x-hidden bg-background ${spaceGrotesk.variable} ${inter.variable}`}
     >
       <head>

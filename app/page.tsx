@@ -8,10 +8,12 @@ import { GbpBenefitSection } from '@/components/gbp-benefit-section'
 import { ShowcaseSection } from '@/components/showcase-section'
 import { FaqSection } from '@/components/faq-section'
 import { SiteFooter } from '@/components/site-footer'
+import { ScrollTopOnLogoNav } from '@/components/scroll-top-on-logo-nav'
 
 export default function Page() {
   return (
     <>
+      <ScrollTopOnLogoNav />
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <HeroSection />
