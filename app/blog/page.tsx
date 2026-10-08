@@ -110,6 +110,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/programmatic-seo-b2b-mittelstand',
+    category: 'Programmatic SEO & Scale',
+    title: 'Programmatic SEO im B2B-Mittelstand: 100+ Nischen skalieren',
+    description:
+      'Wie B2B-Dienstleister und Industrieunternehmen hunderte Branchen-Landingpages ohne Duplicate Content aufbauen und Long-Tail-Nischen im Suchmarkt besetzen.',
+    meta: '8 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
