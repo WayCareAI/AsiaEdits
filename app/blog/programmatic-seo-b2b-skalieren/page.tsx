@@ -8,7 +8,7 @@ import { AuditCta } from '@/components/blog/pseo-b2b/audit-cta'
 const TITLE = 'Programmatic SEO im B2B: Hunderte Zielseiten skalieren'
 const DESCRIPTION =
   'Programmatic SEO im B2B nutzen: Hunderte Zielseiten ohne Duplicate-Penalty skalieren. Jetzt Performance-Analyse anfordern!'
-const URL = 'https://www.asiaedits.com/blog/programmatic-seo-b2b-skalieren'
+const URL = 'https://asiaedits.com/blog/programmatic-seo-b2b-skalieren'
 
 export const metadata: Metadata = {
   title: TITLE,

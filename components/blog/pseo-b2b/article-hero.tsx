@@ -1,5 +1,22 @@
-import { CalendarDays, Clock, Layers, Gauge, Rocket, ShieldCheck, TrendingUp } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  Layers,
+  Gauge,
+  Rocket,
+  ShieldCheck,
+  TrendingUp,
+} from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+
+const ProjectRequestDialog = dynamic(() =>
+  import('@/components/project-request-dialog').then(
+    (mod) => mod.ProjectRequestDialog,
+  ),
+)
 
 const METRICS = [
   {
@@ -65,6 +82,18 @@ export function ArticleHero() {
               <span>Oktober 2026</span>
             </li>
           </ul>
+
+          <div className="mt-8 flex justify-center">
+            <ProjectRequestDialog>
+              <Button
+                size="lg"
+                className="h-11 w-full gap-2 bg-primary px-6 text-base text-primary-foreground shadow-[0_0_24px_-4px_rgba(56,189,248,0.7)] hover:bg-primary/90 sm:w-auto"
+              >
+                Projekt anfragen
+                <ArrowRight className="size-4" />
+              </Button>
+            </ProjectRequestDialog>
+          </div>
         </div>
 
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

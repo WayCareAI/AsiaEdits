@@ -1,7 +1,12 @@
-import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { ArrowRight } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+
+const ProjectRequestDialog = dynamic(() =>
+  import('@/components/project-request-dialog').then(
+    (mod) => mod.ProjectRequestDialog,
+  ),
+)
 
 export function AuditCta() {
   return (
@@ -20,16 +25,15 @@ export function AuditCta() {
             Wir analysieren deine Skalierungspotenziale kostenlos.
           </p>
           <div className="relative mt-8 flex justify-center">
-            <Link
-              href="/projekt-anfragen"
-              className={cn(
-                buttonVariants({ size: 'lg' }),
-                'h-11 w-full gap-2 bg-primary px-6 text-base text-primary-foreground shadow-[0_0_24px_-4px_rgba(56,189,248,0.7)] hover:bg-primary/90 sm:w-auto',
-              )}
-            >
-              Projekt anfragen
-              <ArrowRight className="size-4" />
-            </Link>
+            <ProjectRequestDialog>
+              <Button
+                size="lg"
+                className="h-11 w-full gap-2 bg-primary px-6 text-base text-primary-foreground shadow-[0_0_24px_-4px_rgba(56,189,248,0.7)] hover:bg-primary/90 sm:w-auto"
+              >
+                Projekt anfragen
+                <ArrowRight className="size-4" />
+              </Button>
+            </ProjectRequestDialog>
           </div>
         </div>
       </div>
