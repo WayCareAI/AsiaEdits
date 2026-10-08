@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { AudioLines, Pause, Play, RotateCcw } from 'lucide-react'
+import { AudioLines, LoaderCircle, Pause, Play, RotateCcw } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 type AudioPlayerProps = {
@@ -11,9 +11,7 @@ type AudioPlayerProps = {
   contentSelector?: string
 }
 
-type Chunk = { text: string; start: number }
-type Engine = 'checking' | 'ready' | 'unsupported'
-type Status = 'idle' | 'playing' | 'paused' | 'ended'
+type Status = 'idle' | 'loading' | 'playing' | 'paused' | 'ended'
 
 const RATES = [
   { value: 1, label: '1x', aria: 'Geschwindigkeit 1-fach' },
@@ -21,74 +19,19 @@ const RATES = [
   { value: 1.5, label: '1,5x', aria: 'Geschwindigkeit 1,5-fach' },
 ] as const
 
-const WORDS_PER_MINUTE = 150
-// ~10 s of speech at 1x, safely below Chrome desktop's ~15 s auto-stop for network voices.
-const MAX_CHUNK_LENGTH = 160
-const VOICE_LOAD_TIMEOUT_MS = 1500
-const VOICE_POLL_INTERVAL_MS = 250
-const KEEP_ALIVE_INTERVAL_MS = 10000
-const CLEAN_SLATE_DELAY_MS = 50
-const SPEAK_WATCHDOG_MS = 500
+const TTS_ENDPOINT = '/api/tts'
+const TTS_VOICE = 'onyx'
+// Stays below the 4096-character limit of the TTS model, even after whitespace cleanup.
+const MAX_REQUEST_CHARS = 3000
+const MAX_PARALLEL_REQUESTS = 3
 
-// Windows Chrome/Edge only: other platforms must not get the pause/resume nudge.
-function isWindowsChromium(): boolean {
-  if (typeof navigator === 'undefined') return false
-  const ua = navigator.userAgent
-  return /Windows/.test(ua) && /Chrome\//.test(ua) && !/Mobile/.test(ua)
-}
-
-// Earlier entries are ranked higher. Natural/neural voices are boosted separately.
-const PREFERRED_VOICE_NAMES = [
-  'google deutsch',
-  'marlene',
-  'viktor',
-  'katja',
-  'conrad',
-  'vicki',
-  'anna',
-  'markus',
-  'petra',
-  'yannick',
-  'hedda',
-  'stefan',
-]
+// Playing this inside the click handler unlocks the element on iOS Safari, which
+// otherwise rejects play() once the async audio download has finished.
+const SILENT_WAV =
+  'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
 
 const FOCUS_RING =
   'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
-
-function scoreVoice(voice: SpeechSynthesisVoice): number {
-  const lang = voice.lang.replace('_', '-').toLowerCase()
-  if (!lang.startsWith('de')) return -1
-
-  let score = 1
-  if (lang === 'de-de') score += 20
-  else if (lang === 'de-at') score += 15
-  else score += 5
-
-  const name = voice.name.toLowerCase()
-  const preferredIndex = PREFERRED_VOICE_NAMES.findIndex((n) =>
-    name.includes(n),
-  )
-  if (preferredIndex !== -1) score += 30 - preferredIndex
-  if (name.includes('natural') || name.includes('neural')) score += 40
-  if (name.includes('online')) score += 10
-  return score
-}
-
-function pickGermanVoice(
-  voices: SpeechSynthesisVoice[],
-): SpeechSynthesisVoice | null {
-  let best: SpeechSynthesisVoice | null = null
-  let bestScore = -1
-  for (const voice of voices) {
-    const score = scoreVoice(voice)
-    if (score > bestScore) {
-      best = voice
-      bestScore = score
-    }
-  }
-  return best
-}
 
 function extractBlocks(selector: string): string[] {
   const root = document.querySelector(selector)
@@ -106,47 +49,80 @@ function extractBlocks(selector: string): string[] {
   return blocks
 }
 
-// Chrome cuts off long utterances, so text is spoken in sentence-sized chunks.
-function buildChunks(blocks: string[]): Chunk[] {
-  const pieces: string[] = []
+// Splits at block boundaries, and at sentence boundaries inside oversized blocks,
+// so each request stays below the TTS input limit and is stable (cacheable).
+function buildRequestTexts(blocks: string[]): string[] {
+  const texts: string[] = []
+  let current = ''
+
+  const push = (piece: string) => {
+    if (current && current.length + piece.length + 1 > MAX_REQUEST_CHARS) {
+      texts.push(current)
+      current = ''
+    }
+    current = current ? `${current} ${piece}` : piece
+  }
+
   for (const block of blocks) {
-    if (block.length <= MAX_CHUNK_LENGTH) {
-      pieces.push(block)
+    if (block.length <= MAX_REQUEST_CHARS) {
+      push(block)
       continue
     }
     const sentences = block.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [
       block,
     ]
-    let current = ''
     for (const sentence of sentences) {
-      if (current && current.length + sentence.length > MAX_CHUNK_LENGTH) {
-        pieces.push(current.trim())
-        current = ''
+      const trimmed = sentence.trim()
+      if (!trimmed) continue
+      for (let i = 0; i < trimmed.length; i += MAX_REQUEST_CHARS) {
+        push(trimmed.slice(i, i + MAX_REQUEST_CHARS))
       }
-      current += sentence
     }
-    if (current.trim()) pieces.push(current.trim())
   }
-
-  let start = 0
-  return pieces.map((text) => {
-    const chunk = { text, start }
-    start += text.length
-    return chunk
-  })
+  if (current) texts.push(current)
+  return texts
 }
 
-function countWords(chunks: Chunk[]): number {
-  return chunks.reduce(
-    (sum, chunk) => sum + chunk.text.split(/\s+/).filter(Boolean).length,
+function countWords(texts: string[]): number {
+  return texts.reduce(
+    (sum, text) => sum + text.split(/\s+/).filter(Boolean).length,
     0,
   )
 }
 
-function formatMinutes(wordsLeft: number, rate: number): string {
-  if (wordsLeft <= 0) return '0 Min.'
-  const minutes = wordsLeft / (WORDS_PER_MINUTE * rate)
-  return minutes < 1 ? '< 1 Min.' : `${Math.ceil(minutes)} Min.`
+async function fetchSpeech(
+  text: string,
+  signal: AbortSignal,
+): Promise<ArrayBuffer> {
+  const params = new URLSearchParams({ text, voice: TTS_VOICE })
+  const response = await fetch(`${TTS_ENDPOINT}?${params}`, { signal })
+  if (!response.ok) throw new Error(`TTS request failed (${response.status})`)
+  return response.arrayBuffer()
+}
+
+async function fetchAllSpeech(
+  texts: string[],
+  signal: AbortSignal,
+): Promise<ArrayBuffer[]> {
+  const results = new Array<ArrayBuffer>(texts.length)
+  let next = 0
+  const worker = async () => {
+    while (next < texts.length) {
+      const index = next++
+      results[index] = await fetchSpeech(texts[index], signal)
+    }
+  }
+  await Promise.all(
+    Array.from({ length: Math.min(MAX_PARALLEL_REQUESTS, texts.length) }, worker),
+  )
+  return results
+}
+
+function formatClock(seconds: number): string {
+  const safe = Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0
+  const minutes = Math.floor(safe / 60)
+  const rest = safe % 60
+  return `${String(minutes).padStart(2, '0')}:${String(rest).padStart(2, '0')}`
 }
 
 export function AudioPlayer({
@@ -155,276 +131,146 @@ export function AudioPlayer({
 }: AudioPlayerProps) {
   const titleId = useId()
 
-  const [engine, setEngine] = useState<Engine>('checking')
   const [status, setStatus] = useState<Status>('idle')
   const [rate, setRate] = useState<number>(1)
-  const [percent, setPercent] = useState(0)
-  const [wordCount, setWordCount] = useState(0)
-  const [voiceName, setVoiceName] = useState<string | null>(null)
-  const [hasGermanVoice, setHasGermanVoice] = useState(true)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [announcement, setAnnouncement] = useState('')
 
-  const chunksRef = useRef<Chunk[]>([])
-  const totalRef = useRef(0)
-  const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
-  const rateRef = useRef(1)
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const objectUrlRef = useRef<string | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
   const sessionRef = useRef(0)
-  const chunkIndexRef = useRef(0)
-  const charOffsetRef = useRef(0)
-  const restartOnResumeRef = useRef(false)
-  const startTimerRef = useRef<number | null>(null)
+  const rateRef = useRef(1)
 
-  const clearStartTimer = useCallback(() => {
-    if (startTimerRef.current === null) return
-    window.clearTimeout(startTimerRef.current)
-    startTimerRef.current = null
+  const isArticleLoaded = () =>
+    objectUrlRef.current !== null &&
+    audioRef.current?.src === objectUrlRef.current
+
+  const releaseAudio = useCallback(() => {
+    sessionRef.current += 1
+    abortRef.current?.abort()
+    abortRef.current = null
+    const audio = audioRef.current
+    if (audio) {
+      audio.pause()
+      audio.removeAttribute('src')
+      audio.load()
+    }
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current)
+      objectUrlRef.current = null
+    }
   }, [])
 
-  const prepareChunks = useCallback((): Chunk[] => {
+  useEffect(() => releaseAudio, [releaseAudio])
+
+  const prepareTexts = (): string[] => {
     const blocks = textToRead
-      ? textToRead.split(/\n+/).map((line) => line.trim()).filter(Boolean)
+      ? textToRead
+          .split(/\n+/)
+          .map((line) => line.trim())
+          .filter(Boolean)
       : extractBlocks(contentSelector)
-    const chunks = buildChunks(blocks)
-    chunksRef.current = chunks
-    totalRef.current =
-      chunks.length > 0
-        ? chunks[chunks.length - 1].start + chunks[chunks.length - 1].text.length
-        : 0
-    return chunks
-  }, [textToRead, contentSelector])
+    return buildRequestTexts(blocks)
+  }
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      setEngine('unsupported')
-      return
-    }
+  const startPlayback = async () => {
+    const audio = audioRef.current
+    if (!audio) return
 
-    const synth = window.speechSynthesis
-    setWordCount(countWords(prepareChunks()))
-
-    const updateVoices = () => {
-      const voices = synth.getVoices()
-      if (voices.length === 0) return
-      const german = pickGermanVoice(voices)
-      voiceRef.current = german
-      setHasGermanVoice(german !== null)
-      setVoiceName(german?.name ?? null)
-      setEngine('ready')
-    }
-
-    updateVoices()
-    // Chrome on Windows loads system voices asynchronously and may report an
-    // empty list first; onvoiceschanged (plus a short poll) picks them up later.
-    synth.onvoiceschanged = updateVoices
-    const poll = window.setInterval(() => {
-      if (voiceRef.current) {
-        window.clearInterval(poll)
-        return
-      }
-      updateVoices()
-    }, VOICE_POLL_INTERVAL_MS)
-    const timeout = window.setTimeout(() => {
-      window.clearInterval(poll)
-      if (!voiceRef.current) setHasGermanVoice(false)
-      setEngine((current) => (current === 'checking' ? 'ready' : current))
-    }, VOICE_LOAD_TIMEOUT_MS)
-
-    const stopSpeaking = () => {
-      sessionRef.current += 1
-      synth.cancel()
-    }
-    window.addEventListener('pagehide', stopSpeaking)
-
-    return () => {
-      window.clearTimeout(timeout)
-      window.clearInterval(poll)
-      synth.onvoiceschanged = null
-      window.removeEventListener('pagehide', stopSpeaking)
-      stopSpeaking()
-    }
-  }, [prepareChunks])
-
-  // Chrome on Windows silently stops network voices after ~15 s of continuous speech.
-  useEffect(() => {
-    if (status !== 'playing' || !isWindowsChromium()) return
-    const synth = window.speechSynthesis
-    const interval = window.setInterval(() => {
-      const voice = voiceRef.current
-      if (!synth.speaking || synth.paused || (voice && voice.localService)) return
-      synth.pause()
-      synth.resume()
-    }, KEEP_ALIVE_INTERVAL_MS)
-    return () => window.clearInterval(interval)
-  }, [status])
-
-  const speakFrom = useCallback(
-    function speak(index: number, offset = 0, langOnly = false) {
-      const synth = window.speechSynthesis
-      const chunks = chunksRef.current
-
-      if (index >= chunks.length) {
-        chunkIndexRef.current = 0
-        charOffsetRef.current = 0
-        setPercent(100)
-        setStatus('ended')
-        setAnnouncement('Wiedergabe beendet')
-        return
-      }
-
-      // Resets Chrome desktop's audio queue to avoid silent hangs. The session is
-      // bumped first so end/error events of cancelled utterances (Safari fires
-      // `end` on cancel) can never advance playback a second time.
-      sessionRef.current += 1
-      synth.cancel()
-      if (synth.paused) synth.resume()
-      const session = sessionRef.current
-
-      const chunk = chunks[index]
-      chunkIndexRef.current = index
-      charOffsetRef.current = offset
-
-      if (!voiceRef.current) {
-        const late = pickGermanVoice(synth.getVoices())
-        if (late) {
-          voiceRef.current = late
-          setHasGermanVoice(true)
-          setVoiceName(late.name)
-        }
-      }
-
-      const utterance = new SpeechSynthesisUtterance(chunk.text.slice(offset))
-      // Without a voice object (or on the watchdog retry) only `lang` is set, so
-      // Windows falls back to its native OS speech engine.
-      const voice = langOnly ? null : voiceRef.current
-      if (voice) utterance.voice = voice
-      utterance.lang = voice?.lang ?? 'de-DE'
-      utterance.rate = rateRef.current
-
-      const updateProgress = (position: number) => {
-        const total = totalRef.current
-        if (total === 0) return
-        setPercent(Math.min(100, Math.round((position / total) * 100)))
-      }
-
-      utterance.onboundary = (event) => {
-        if (session !== sessionRef.current) return
-        charOffsetRef.current = offset + event.charIndex
-        updateProgress(chunk.start + offset + event.charIndex)
-      }
-      utterance.onend = () => {
-        if (session !== sessionRef.current) return
-        updateProgress(chunk.start + chunk.text.length)
-        speak(index + 1)
-      }
-      utterance.onerror = (event) => {
-        // Every intentional cancel bumps the session, so a matching session means
-        // the browser stopped on its own and the UI must not stay in "playing".
-        if (session !== sessionRef.current) return
-        sessionRef.current += 1
-        setStatus('idle')
-        if (event.error !== 'canceled' && event.error !== 'interrupted') {
-          setErrorMessage(
-            'Die Wiedergabe wurde vom Browser unterbrochen. Bitte versuchen Sie es erneut.',
-          )
-        }
-      }
-
-      synth.speak(utterance)
-
-      // Windows Chromium can swallow speak() without any event. If nothing is
-      // speaking shortly after, nudge the engine once, then re-trigger once.
-      if (!langOnly && isWindowsChromium()) {
-        window.setTimeout(() => {
-          if (session !== sessionRef.current || synth.speaking) return
-          synth.resume()
-          if (synth.speaking) return
-          speak(index, charOffsetRef.current, true)
-        }, SPEAK_WATCHDOG_MS)
-      }
-    },
-    [],
-  )
-
-  const handlePlayPause = () => {
-    if (engine !== 'ready') return
-    const synth = window.speechSynthesis
-    setErrorMessage(null)
-
-    if (status === 'playing') {
-      if (startTimerRef.current !== null) {
-        // Paused before the delayed start fired: resume must start from scratch.
-        clearStartTimer()
-        restartOnResumeRef.current = true
-      }
-      synth.pause()
-      setStatus('paused')
-      setAnnouncement('Pausiert')
-      return
-    }
-
-    if (status === 'paused') {
-      if (restartOnResumeRef.current) {
-        restartOnResumeRef.current = false
-        sessionRef.current += 1
-        synth.cancel()
-        synth.resume()
-        speakFrom(chunkIndexRef.current, charOffsetRef.current)
-      } else {
-        synth.resume()
-      }
-      setStatus('playing')
-      setAnnouncement('Wiedergabe fortgesetzt')
-      return
-    }
-
-    sessionRef.current += 1
-    synth.cancel()
-    const chunks = prepareChunks()
-    if (chunks.length === 0) {
+    const texts = prepareTexts()
+    if (texts.length === 0) {
       setErrorMessage('Für diesen Artikel konnte kein Text gefunden werden.')
       return
     }
-    setWordCount(countWords(chunks))
-    setPercent(0)
-    chunkIndexRef.current = 0
-    charOffsetRef.current = 0
-    setStatus('playing')
-    setAnnouncement('Wiedergabe gestartet')
 
-    if (!isWindowsChromium()) {
-      speakFrom(0)
+    // Replaces any previously loaded article; keeps the element for the unlock.
+    releaseAudio()
+    const session = sessionRef.current
+    const controller = new AbortController()
+    abortRef.current = controller
+
+    setErrorMessage(null)
+    setCurrentTime(0)
+    setDuration(0)
+    setStatus('loading')
+    setAnnouncement('Audio wird geladen')
+
+    audio.src = SILENT_WAV
+    audio.play().catch(() => {})
+
+    try {
+      const buffers = await fetchAllSpeech(texts, controller.signal)
+      if (session !== sessionRef.current) return
+
+      const url = URL.createObjectURL(new Blob(buffers, { type: 'audio/mpeg' }))
+      objectUrlRef.current = url
+      audio.defaultPlaybackRate = rateRef.current
+      audio.src = url
+      audio.playbackRate = rateRef.current
+      await audio.play()
+    } catch (error) {
+      if (session !== sessionRef.current) return
+      if (error instanceof DOMException && error.name === 'NotAllowedError') {
+        // Loaded fine but the browser wants another tap before it will play.
+        setStatus('paused')
+        setAnnouncement('Bereit, zum Abspielen erneut tippen')
+        return
+      }
+      if (error instanceof DOMException && error.name === 'AbortError') return
+      releaseAudio()
+      setStatus('idle')
+      setErrorMessage(
+        'Das Audio konnte nicht geladen werden. Bitte versuchen Sie es erneut.',
+      )
+    }
+  }
+
+  const handlePlayPause = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    setErrorMessage(null)
+
+    if (status === 'loading') {
+      releaseAudio()
+      setStatus('idle')
+      setAnnouncement('Laden abgebrochen')
       return
     }
 
-    // Windows Chrome/Edge only: unlock audio with a silent utterance inside the
-    // click stack, then start from a clean slate after a short delay. Other
-    // platforms keep the synchronous start that iOS Safari requires.
-    synth.resume()
-    const unlockUtterance = new SpeechSynthesisUtterance('')
-    unlockUtterance.volume = 0
-    synth.speak(unlockUtterance)
+    if (status === 'playing') {
+      audio.pause()
+      return
+    }
 
-    const session = sessionRef.current
-    clearStartTimer()
-    startTimerRef.current = window.setTimeout(() => {
-      startTimerRef.current = null
-      if (session !== sessionRef.current) return
-      speakFrom(0)
-    }, CLEAN_SLATE_DELAY_MS)
+    if (isArticleLoaded()) {
+      if (status === 'ended' || status === 'idle') audio.currentTime = 0
+      audio.play().catch(() => {
+        setErrorMessage(
+          'Die Wiedergabe wurde vom Browser blockiert. Bitte versuchen Sie es erneut.',
+        )
+      })
+      return
+    }
+
+    void startPlayback()
   }
 
   const handleReset = () => {
-    if (engine !== 'ready') return
-    clearStartTimer()
-    sessionRef.current += 1
-    window.speechSynthesis.cancel()
-    chunkIndexRef.current = 0
-    charOffsetRef.current = 0
-    restartOnResumeRef.current = false
-    setPercent(0)
-    setStatus('idle')
+    const audio = audioRef.current
+    if (!audio) return
     setErrorMessage(null)
+
+    if (status === 'loading' || !isArticleLoaded()) {
+      releaseAudio()
+    } else {
+      audio.pause()
+      audio.currentTime = 0
+    }
+    setCurrentTime(0)
+    setStatus('idle')
     setAnnouncement('Zurückgesetzt, Wiedergabe beginnt wieder von vorn')
   }
 
@@ -433,32 +279,44 @@ export function AudioPlayer({
     rateRef.current = nextRate
     setRate(nextRate)
     setAnnouncement(ariaLabel)
-
-    if (status === 'playing') {
-      clearStartTimer()
-      sessionRef.current += 1
-      window.speechSynthesis.cancel()
-      speakFrom(chunkIndexRef.current, charOffsetRef.current)
-    } else if (status === 'paused') {
-      restartOnResumeRef.current = true
+    const audio = audioRef.current
+    if (audio) {
+      audio.defaultPlaybackRate = nextRate
+      audio.playbackRate = nextRate
     }
   }
 
-  const isReady = engine === 'ready'
-  const isPlaying = status === 'playing'
-  const playLabel = isPlaying
-    ? 'Pause'
-    : status === 'paused'
-      ? 'Wiedergabe fortsetzen'
-      : 'Artikel vorlesen lassen'
+  const handleSeek = (value: number) => {
+    const audio = audioRef.current
+    if (!audio || !isArticleLoaded()) return
+    audio.currentTime = value
+    setCurrentTime(value)
+  }
 
-  const wordsLeft = Math.round(wordCount * (1 - percent / 100))
-  const timeLabel =
-    wordCount === 0
-      ? '–'
-      : status === 'idle' || status === 'ended'
-        ? `ca. ${formatMinutes(wordCount, rate)} Hördauer`
-        : `noch ca. ${formatMinutes(wordsLeft, rate)}`
+  const syncDuration = () => {
+    const audio = audioRef.current
+    if (!audio || !isArticleLoaded()) return
+    if (Number.isFinite(audio.duration)) setDuration(audio.duration)
+  }
+
+  const isLoading = status === 'loading'
+  const isPlaying = status === 'playing'
+  const canSeek = (isPlaying || status === 'paused') && duration > 0
+  const percent =
+    duration > 0 ? Math.min(100, Math.round((currentTime / duration) * 100)) : 0
+  const playLabel = isLoading
+    ? 'Laden abbrechen'
+    : isPlaying
+      ? 'Pause'
+      : status === 'paused'
+        ? 'Wiedergabe fortsetzen'
+        : 'Artikel vorlesen lassen'
+
+  const statusText = errorMessage
+    ? errorMessage
+    : isLoading
+      ? 'Audio wird geladen …'
+      : null
 
   return (
     <section
@@ -482,7 +340,8 @@ export function AudioPlayer({
             className="text-sm tabular-nums text-foreground/80"
             data-testid="audio-time"
           >
-            {timeLabel}
+            <span className="sr-only">Wiedergabezeit </span>
+            {formatClock(currentTime)} / {formatClock(duration)}
           </p>
         </div>
 
@@ -493,99 +352,124 @@ export function AudioPlayer({
           Diesen Artikel vorlesen lassen
         </p>
 
-        {engine === 'unsupported' ? (
-          <p
-            role="status"
-            className="mt-3 leading-relaxed text-pretty text-foreground/80"
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={handlePlayPause}
+            aria-label={playLabel}
+            aria-busy={isLoading}
+            className={`inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-background transition-colors hover:bg-primary/85 disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
           >
-            Die Vorlesefunktion wird von diesem Browser nicht unterstützt. Der
-            vollständige Artikel steht Ihnen weiterhin als Text zur Verfügung.
-          </p>
-        ) : (
-          <>
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={handlePlayPause}
-                disabled={!isReady}
-                aria-label={playLabel}
-                className={`inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-background transition-colors hover:bg-primary/85 disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
-              >
-                {isPlaying ? (
-                  <Pause className="size-5" aria-hidden />
-                ) : (
-                  <Play className="size-5" aria-hidden />
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleReset}
-                disabled={!isReady || (status === 'idle' && percent === 0)}
-                aria-label="Zurücksetzen und von vorn beginnen"
-                className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 text-foreground transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
-              >
-                <RotateCcw className="size-4" aria-hidden />
-              </button>
-
-              <div
-                role="group"
-                aria-label="Wiedergabegeschwindigkeit"
-                className="ml-auto flex items-center gap-2"
-              >
-                {RATES.map((option) => {
-                  const active = option.value === rate
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() =>
-                        handleRateChange(option.value, option.aria)
-                      }
-                      disabled={!isReady}
-                      aria-pressed={active}
-                      aria-label={option.aria}
-                      className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-sm font-semibold tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING} ${
-                        active
-                          ? 'border-primary bg-primary text-background'
-                          : 'border-primary/40 text-foreground hover:bg-primary/10'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div
-              role="progressbar"
-              aria-label="Fortschritt der Vorlesefunktion"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={percent}
-              aria-valuetext={`${percent} Prozent vorgelesen`}
-              className="mt-5 h-2 w-full overflow-hidden rounded-full bg-foreground/15"
-            >
-              <div
-                className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 motion-reduce:transition-none"
-                style={{ transform: `scaleX(${percent / 100})` }}
+            {isLoading ? (
+              <LoaderCircle
+                className="size-5 motion-safe:animate-spin"
+                aria-hidden
               />
-            </div>
+            ) : isPlaying ? (
+              <Pause className="size-5" aria-hidden />
+            ) : (
+              <Play className="size-5" aria-hidden />
+            )}
+          </button>
 
-            <p className="mt-3 min-h-5 text-sm leading-relaxed text-foreground/80">
-              {errorMessage
-                ? errorMessage
-                : engine === 'checking'
-                  ? 'Stimmen werden geladen …'
-                  : voiceName
-                    ? `Stimme: ${voiceName}`
-                    : !hasGermanVoice
-                      ? 'Keine deutsche Stimme gefunden – die Standardstimme Ihres Geräts wird verwendet.'
-                      : null}
-            </p>
-          </>
-        )}
+          <button
+            type="button"
+            onClick={handleReset}
+            disabled={status === 'idle' && currentTime === 0}
+            aria-label="Zurücksetzen und von vorn beginnen"
+            className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 text-foreground transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
+          >
+            <RotateCcw className="size-4" aria-hidden />
+          </button>
+
+          <div
+            role="group"
+            aria-label="Wiedergabegeschwindigkeit"
+            className="ml-auto flex items-center gap-2"
+          >
+            {RATES.map((option) => {
+              const active = option.value === rate
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleRateChange(option.value, option.aria)}
+                  aria-pressed={active}
+                  aria-label={option.aria}
+                  className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-sm font-semibold tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING} ${
+                    active
+                      ? 'border-primary bg-primary text-background'
+                      : 'border-primary/40 text-foreground hover:bg-primary/10'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="relative mt-5 h-2 w-full rounded-full bg-foreground/15 focus-within:ring-4 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background">
+          <div className="h-full w-full overflow-hidden rounded-full">
+            <div
+              className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 motion-reduce:transition-none"
+              style={{ transform: `scaleX(${percent / 100})` }}
+            />
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={duration > 0 ? duration : 1}
+            step={1}
+            value={Math.min(currentTime, duration > 0 ? duration : 1)}
+            disabled={!canSeek}
+            onChange={(event) => handleSeek(Number(event.target.value))}
+            aria-label="Position im Artikel-Audio"
+            aria-valuetext={`${formatClock(currentTime)} von ${formatClock(duration)}`}
+            className="absolute -inset-y-3 inset-x-0 h-8 w-full cursor-pointer appearance-none bg-transparent opacity-0 disabled:cursor-default"
+          />
+        </div>
+
+        <p
+          role={errorMessage ? 'alert' : undefined}
+          className="mt-3 min-h-5 text-sm leading-relaxed text-foreground/80"
+        >
+          {statusText}
+        </p>
+
+        <audio
+          ref={audioRef}
+          preload="none"
+          onLoadedMetadata={syncDuration}
+          onDurationChange={syncDuration}
+          onTimeUpdate={(event) => {
+            if (isArticleLoaded()) setCurrentTime(event.currentTarget.currentTime)
+          }}
+          onPlaying={() => {
+            if (!isArticleLoaded()) return
+            setStatus('playing')
+            setAnnouncement('Wiedergabe gestartet')
+          }}
+          onPause={(event) => {
+            if (!isArticleLoaded() || event.currentTarget.ended) return
+            setStatus('paused')
+            setAnnouncement('Pausiert')
+          }}
+          onEnded={(event) => {
+            if (!isArticleLoaded()) return
+            setStatus('ended')
+            setCurrentTime(event.currentTarget.duration)
+            setAnnouncement('Wiedergabe beendet')
+          }}
+          onError={() => {
+            if (!isArticleLoaded()) return
+            releaseAudio()
+            setStatus('idle')
+            setErrorMessage(
+              'Die Wiedergabe wurde unterbrochen. Bitte versuchen Sie es erneut.',
+            )
+          }}
+        />
 
         <p role="status" aria-live="polite" className="sr-only">
           {announcement}
