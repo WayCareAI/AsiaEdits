@@ -108,6 +108,13 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     readingTime: '8 min Lesezeit',
   },
   {
+    slug: 'b2c-buchungs-ux-frictionless-flows',
+    cluster: 'conversion',
+    category: 'B2C UX & Conversion',
+    title: 'B2C Buchungs-UX: In 3 Klicks zum Termin',
+    readingTime: '8 min Lesezeit',
+  },
+  {
     slug: 'programmatic-seo-b2b-skalieren',
     cluster: 'pseo',
     category: 'Programmatic SEO',
