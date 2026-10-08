@@ -118,6 +118,14 @@ const POSTS = [
     meta: '8 min Lesezeit',
   },
   {
+    href: '/blog/b2c-buchungs-ux-frictionless-flows',
+    category: 'B2C UX & Conversion',
+    title: 'B2C Buchungs-UX: In 3 Klicks zum Termin',
+    description:
+      'Wie reibungslose Formular-Flows, blitzschnelle Ladezeiten und mobile Erstklasse-Erlebnisse aus spontanen Website-Besuchern feste Termine und Buchungen machen.',
+    meta: '8 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
