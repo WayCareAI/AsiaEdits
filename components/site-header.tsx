@@ -15,11 +15,12 @@ const ProjectRequestDialog = dynamic(() =>
 )
 
 const NAV_LINKS = [
-  { href: '#warum-wir', label: 'Warum wir' },
-  { href: '#workflow', label: 'Workflow' },
-  { href: '#referenzen', label: 'Referenzen' },
-  { href: '#preise', label: 'Preise' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '/#warum-wir', label: 'Warum wir' },
+  { href: '/#workflow', label: 'Workflow' },
+  { href: '/#referenzen', label: 'Referenzen' },
+  { href: '/#preise', label: 'Preise' },
+  { href: '/#faq', label: 'FAQ' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 export function SiteHeader() {
@@ -28,7 +29,7 @@ export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="#top" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Image
             src="/icon.webp"
             alt="asiaedits.com Logo"

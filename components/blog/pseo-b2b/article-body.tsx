@@ -194,7 +194,7 @@ export function ArticleBody() {
       </Section>
 
       <Section>
-        <H2>Fazit: Skalierung mit Köpfchen schlägt sture Handarbeit</H2>
+        <H2>Strategische Key Takeaways: Skalierung mit Köpfchen schlägt sture Handarbeit</H2>
         <P>
           Programmatic SEO ist der stärkste Hebel für regionales und
           branchenspezifisches B2B-Wachstum. Wer Technologie und semantisches
