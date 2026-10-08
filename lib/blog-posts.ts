@@ -129,6 +129,20 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     readingTime: '8 min Lesezeit',
   },
   {
+    slug: 'b2c-kunden-hubs-custom-webapps',
+    cluster: 'conversion',
+    category: 'Custom Webapps & B2C',
+    title: 'Digitale B2C Kunden-Hubs: Kundenbindung 2026',
+    readingTime: '8 min Lesezeit',
+  },
+  {
+    slug: 'b2c-datenschutz-trust-ux',
+    cluster: 'conversion',
+    category: 'B2C Trust & Privacy',
+    title: 'B2C Datenschutz & Trust UX: Vertrauen aufbauen',
+    readingTime: '7 min Lesezeit',
+  },
+  {
     slug: 'programmatic-seo-b2b-skalieren',
     cluster: 'pseo',
     category: 'Programmatic SEO',

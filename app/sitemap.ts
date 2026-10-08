@@ -108,7 +108,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/blog/b2c-accessibility-generationen-ux`,
+      url: `${baseUrl}/blog/b2c-kunden-hubs-custom-webapps`,
+  lastModified: new Date(),
+  changeFrequency: "monthly",
+  priority: 0.7,
+  },
+  {
+  url: `${baseUrl}/blog/b2c-accessibility-generationen-ux`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/b2c-datenschutz-trust-ux`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
