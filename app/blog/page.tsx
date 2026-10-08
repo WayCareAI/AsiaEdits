@@ -62,6 +62,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/core-web-vitals-lcp-guide',
+    category: 'Web Performance & Tech SEO',
+    title: 'Core Web Vitals 2026: LCP unter 1,0s im B2B erreichen',
+    description:
+      'Wie extrem kurze Ladezeiten, geringe Latenzen und optimierte Core Web Vitals die Absprungrate senken und Google-Spitzenplätze sichern.',
+    meta: '8 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
