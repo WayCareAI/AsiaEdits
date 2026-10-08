@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Impressum | asiaedits.com',
+  description:
+    'Impressum und Anbieterkennzeichnung von asiaedits.com – Webdesign & Web Development Freelancer.',
+  alternates: { canonical: 'https://asiaedits.com/impressum' },
+}
 
 export default function ImpressumPage() {
   return (

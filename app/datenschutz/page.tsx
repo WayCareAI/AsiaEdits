@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Datenschutzerklärung | asiaedits.com',
+  description:
+    'Datenschutzerklärung von asiaedits.com – so gehen wir mit Deinen personenbezogenen Daten um.',
+  alternates: { canonical: 'https://asiaedits.com/datenschutz' },
+}
 
 export default function DatenschutzPage() {
   return (
