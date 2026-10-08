@@ -1,0 +1,99 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { SiteHeader } from '@/components/site-header'
+import { SiteFooter } from '@/components/site-footer'
+
+const TITLE = 'Blog & Case Studies | asiaedits.com'
+const DESCRIPTION =
+  'Case Studies und Fachartikel zu Webdesign, Local SEO und Programmatic SEO für B2B-Unternehmen und Handwerksbetriebe.'
+const URL = 'https://asiaedits.com/blog'
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: URL },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: URL,
+    siteName: 'asiaedits.com',
+    images: [
+      { url: '/opengraph-image.png', width: 1200, height: 630, alt: TITLE },
+    ],
+    locale: 'de_DE',
+    type: 'website',
+  },
+}
+
+const POSTS = [
+  {
+    href: '/blog/case-study-saaraxt',
+    category: 'Case Study & Local SEO',
+    title: 'SaarAxt.de: +10% Lead Conversion & 9,2% CTR im Handwerk',
+    description:
+      'Wie eine entkoppelte Edge-Architektur und WDF*IDF Text-Engineering innerhalb von 30 Tagen lokale Marktführerschaft aufbauen.',
+    meta: '6 min Lesezeit',
+  },
+  {
+    href: '/blog/programmatic-seo-b2b-skalieren',
+    category: 'Programmatic SEO',
+    title: 'Programmatic SEO im B2B skalieren',
+    description:
+      'Wie Technologie und semantisches Varianz-Engineering Reichweite und Kundenanfragen für B2B-Unternehmen skalieren.',
+    meta: 'Fachartikel',
+  },
+]
+
+export default function BlogIndexPage() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="relative w-full max-w-full overflow-x-hidden px-4 pt-32 pb-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <header className="mb-12 text-center">
+            <p className="mb-3 text-sm font-medium tracking-wide text-primary uppercase">
+              Blog &amp; Case Studies
+            </p>
+            <h1 className="font-heading text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl">
+              Wissen und Ergebnisse aus echten Projekten
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-pretty text-muted-foreground">
+              {DESCRIPTION}
+            </p>
+          </header>
+
+          <ul className="flex flex-col gap-6">
+            {POSTS.map((post) => (
+              <li key={post.href}>
+                <Link
+                  href={post.href}
+                  className="group flex flex-col gap-3 rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/50 sm:p-8"
+                >
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <span className="font-medium text-primary">
+                      {post.category}
+                    </span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{post.meta}</span>
+                  </div>
+                  <h2 className="font-heading text-2xl font-semibold text-balance text-foreground">
+                    {post.title}
+                  </h2>
+                  <p className="leading-relaxed text-pretty text-muted-foreground">
+                    {post.description}
+                  </p>
+                  <span className="mt-1 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                    Artikel lesen
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  )
+}

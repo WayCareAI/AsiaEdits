@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/social-icons'
 
 const LegalDialog = dynamic(() =>
@@ -41,6 +42,12 @@ export function SiteFooter() {
         <div className="flex flex-col items-center gap-4 sm:w-full sm:flex-row sm:justify-between">
           <p>&copy; {new Date().getFullYear()} asiaedits.com. Alle Rechte vorbehalten.</p>
           <nav className="flex flex-wrap items-center justify-center gap-6">
+            <Link
+              href="/blog"
+              className="transition-colors hover:text-foreground"
+            >
+              Blog &amp; Case Studies
+            </Link>
             <button
               type="button"
               onClick={() => openDialog('impressum')}

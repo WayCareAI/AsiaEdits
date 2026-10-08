@@ -186,7 +186,7 @@ export function ArticleBody() {
       </Section>
 
       <Section>
-        <H2>Fazit: Was Unternehmen aus dem Case SaarAxt lernen können</H2>
+        <H2>Erkenntnisse &amp; Potenziale für Unternehmen</H2>
         <P>
           Der Erfolg von SaarAxt.de beweist, dass es im heutigen B2B- und
           Dienstleistungssektor nicht darauf ankommt, das größte Budget zu haben
