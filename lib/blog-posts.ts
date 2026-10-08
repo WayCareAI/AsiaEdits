@@ -122,6 +122,13 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     readingTime: '7 min Lesezeit',
   },
   {
+    slug: 'b2c-accessibility-generationen-ux',
+    cluster: 'accessibility',
+    category: 'B2C Accessibility',
+    title: 'B2C Accessibility: Websites für alle Generationen',
+    readingTime: '8 min Lesezeit',
+  },
+  {
     slug: 'programmatic-seo-b2b-skalieren',
     cluster: 'pseo',
     category: 'Programmatic SEO',

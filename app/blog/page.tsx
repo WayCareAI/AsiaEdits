@@ -134,6 +134,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/b2c-accessibility-generationen-ux',
+    category: 'B2C Accessibility',
+    title: 'B2C Accessibility: Websites für alle Generationen',
+    description:
+      'Wie B2C-Plattformen durch vergrößerbare Schriften, Audio-UX, einfache Touch-Bedienung und klare Strukturen kaufkräftige Zielgruppen von Jung bis Alt begeistern.',
+    meta: '8 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
