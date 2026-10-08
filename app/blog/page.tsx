@@ -70,6 +70,14 @@ const POSTS = [
     meta: '8 min Lesezeit',
   },
   {
+    href: '/blog/google-local-pack-dominanz',
+    category: 'Local SEO & Geo-Targeting',
+    title: 'Local SEO 2026: Schema.org & Local Pack Dominanz',
+    description:
+      'Wie B2B-Dienstleister und lokale Spezialisten durch strukturierte Geodaten und zielgerichtetes Geo-Targeting die obersten Plätze im Kartenpaket erobern.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
