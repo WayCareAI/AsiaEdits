@@ -102,6 +102,14 @@ const POSTS = [
     meta: '8 min Lesezeit',
   },
   {
+    href: '/blog/audio-ux-accessible-micro-interactions',
+    category: 'Audio UX & Accessibility',
+    title: 'Audio-UX & Barrierefreie Micro-Interactions im B2B',
+    description:
+      'Wie integrierte Voice-UI, barrierefreie Vorlese-Player und hochgradig zugängliche Micro-Interactions Hürden abbauen und Anfrageraten verdoppeln.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
