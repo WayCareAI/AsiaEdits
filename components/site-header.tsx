@@ -22,6 +22,7 @@ const NAV_LINKS = [
   { href: '/#referenzen', label: 'Referenzen' },
   { href: '/#preise', label: 'Preise' },
   { href: '/#faq', label: 'FAQ' },
+  { href: '/ueber-uns', label: 'Über uns' },
   { href: '/blog', label: 'Blog' },
 ]
 
