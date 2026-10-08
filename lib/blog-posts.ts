@@ -143,6 +143,13 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     readingTime: '7 min Lesezeit',
   },
   {
+    slug: 'edtech-pwa-plattformen-bildungseinrichtungen',
+    cluster: 'conversion',
+    category: 'EdTech & PWA',
+    title: 'EdTech & PWA-Plattformen: Digitalisierung im Bildungswesen',
+    readingTime: '8 min Lesezeit',
+  },
+  {
     slug: 'programmatic-seo-b2b-skalieren',
     cluster: 'pseo',
     category: 'Programmatic SEO',

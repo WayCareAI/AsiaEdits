@@ -158,6 +158,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/edtech-pwa-plattformen-bildungseinrichtungen',
+    category: 'EdTech & PWA',
+    title: 'EdTech & PWA-Plattformen: Digitalisierung im Bildungswesen',
+    description:
+      'Warum Progressive Web Apps die Zukunft der digitalen Bildung sind: hürdenfrei, blitzschnell und maßgeschneidert für Bildungseinrichtungen, Lehrkräfte und Privatkunden.',
+    meta: '8 min Lesezeit',
+  },
+  {
   href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
