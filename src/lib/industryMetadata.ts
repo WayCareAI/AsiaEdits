@@ -15,7 +15,7 @@ export function buildIndustryMetadata(
   }
 
   const content = generatePSEOContent(undefined, industry, keywordType)
-  const canonicalUrl = `https://www.asiaedits.com/branchen/${keywordType}-${industry.slug}`
+  const canonicalUrl = `https://asiaedits.com/branchen/${keywordType}-${industry.slug}`
 
   return {
     title: content.metaTitle,

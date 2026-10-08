@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     'local seo friseur',
   ],
   alternates: {
-    canonical: 'https://www.asiaedits.com/website-fuer-friseure',
+    canonical: 'https://asiaedits.com/website-fuer-friseure',
   },
   openGraph: {
     title: 'Website für Friseure 2026: Mehr Termine & Kunden ab 199 €',
     description:
       'Moderne Website für Friseure erstellen lassen. Mit schlanken Webformularen, WhatsApp-Contact, 100/100 PageSpeed & Local SEO.',
-    url: 'https://www.asiaedits.com/website-fuer-friseure',
+    url: 'https://asiaedits.com/website-fuer-friseure',
     siteName: 'asiaedits.com',
     images: [
       {

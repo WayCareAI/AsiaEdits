@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     'local seo handwerker',
   ],
   alternates: {
-    canonical: 'https://www.asiaedits.com/website-fuer-handwerker',
+    canonical: 'https://asiaedits.com/website-fuer-handwerker',
   },
   openGraph: {
     title: 'Website für Handwerker 2026: Mehr Kunden & Anfragen ab 199 €',
     description:
       'Professionelle Website für Handwerker erstellen lassen. Mehr regionale Kunden, 100/100 PageSpeed & 0 % Wartungsstress.',
-    url: 'https://www.asiaedits.com/website-fuer-handwerker',
+    url: 'https://asiaedits.com/website-fuer-handwerker',
     siteName: 'asiaedits.com',
     images: [
       {

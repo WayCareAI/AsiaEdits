@@ -14,13 +14,13 @@ export const metadata: Metadata = {
   description:
     'Schluss mit langsamen WordPress-Themes, Plugin-Frust & Hacking-Risiko. Wir bauen deine Website auf blitzschneller Next.js-Basis (100/100 PageSpeed).',
   alternates: {
-    canonical: 'https://www.asiaedits.com/wordpress-alternative',
+    canonical: 'https://asiaedits.com/wordpress-alternative',
   },
   openGraph: {
     title: 'WordPress Alternative 2026: Next.js Webdesign ab 199 €',
     description:
       'Schluss mit langsamen WordPress-Themes, Plugin-Frust & Hacking-Risiko. Wir bauen deine Website auf blitzschneller Next.js-Basis (100/100 PageSpeed).',
-    url: 'https://www.asiaedits.com/wordpress-alternative',
+    url: 'https://asiaedits.com/wordpress-alternative',
     siteName: 'asiaedits.com',
     images: [
       {

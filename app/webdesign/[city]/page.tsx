@@ -33,12 +33,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: content.metaTitle,
     description: content.metaDescription,
     alternates: {
-      canonical: `https://www.asiaedits.com/webdesign/${city.slug}`,
+      canonical: `https://asiaedits.com/webdesign/${city.slug}`,
     },
     openGraph: {
       title: content.metaTitle,
       description: content.metaDescription,
-      url: `https://www.asiaedits.com/webdesign/${city.slug}`,
+      url: `https://asiaedits.com/webdesign/${city.slug}`,
       siteName: 'asiaedits.com',
       images: [
         {

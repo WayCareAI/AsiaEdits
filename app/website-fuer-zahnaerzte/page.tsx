@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     'praxisdesign zahnarzt',
   ],
   alternates: {
-    canonical: 'https://www.asiaedits.com/website-fuer-zahnaerzte',
+    canonical: 'https://asiaedits.com/website-fuer-zahnaerzte',
   },
   openGraph: {
     title: 'Website für Zahnärzte 2026: Mehr Patienten & Termine ab 199 €',
     description:
       'Moderne Website für Zahnärzte erstellen lassen. Mit schlanken Webformularen, WhatsApp-Contact, 90/100 PageSpeed-Garantie & Local SEO.',
-    url: 'https://www.asiaedits.com/website-fuer-zahnaerzte',
+    url: 'https://asiaedits.com/website-fuer-zahnaerzte',
     siteName: 'asiaedits.com',
     images: [
       {
