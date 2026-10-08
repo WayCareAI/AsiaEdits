@@ -36,6 +36,15 @@ const POSTS = [
     meta: '6 min Lesezeit',
   },
   {
+    href: '/blog/case-study-the-beach',
+    category: 'Case Study & Accessibility UX',
+    title:
+      'The Beach Altersresidenz Thailand: +10% Lead Conversion durch Audio-UX',
+    description:
+      'Wie zielgruppengerechte Audio-Funktionen und entkoppelte Web-Performance Vertrauen aufbauen und hochkarätige Anfragen generieren.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
