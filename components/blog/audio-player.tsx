@@ -27,6 +27,8 @@ const MAX_CHUNK_LENGTH = 160
 const VOICE_LOAD_TIMEOUT_MS = 1500
 const VOICE_POLL_INTERVAL_MS = 250
 const KEEP_ALIVE_INTERVAL_MS = 10000
+const CLEAN_SLATE_DELAY_MS = 50
+const SPEAK_WATCHDOG_MS = 500
 
 // Windows Chrome/Edge only: other platforms must not get the pause/resume nudge.
 function isWindowsChromium(): boolean {
@@ -171,6 +173,13 @@ export function AudioPlayer({
   const chunkIndexRef = useRef(0)
   const charOffsetRef = useRef(0)
   const restartOnResumeRef = useRef(false)
+  const startTimerRef = useRef<number | null>(null)
+
+  const clearStartTimer = useCallback(() => {
+    if (startTimerRef.current === null) return
+    window.clearTimeout(startTimerRef.current)
+    startTimerRef.current = null
+  }, [])
 
   const prepareChunks = useCallback((): Chunk[] => {
     const blocks = textToRead
@@ -250,7 +259,7 @@ export function AudioPlayer({
   }, [status])
 
   const speakFrom = useCallback(
-    function speak(index: number, offset = 0) {
+    function speak(index: number, offset = 0, langOnly = false) {
       const synth = window.speechSynthesis
       const chunks = chunksRef.current
 
@@ -285,7 +294,9 @@ export function AudioPlayer({
       }
 
       const utterance = new SpeechSynthesisUtterance(chunk.text.slice(offset))
-      const voice = voiceRef.current
+      // Without a voice object (or on the watchdog retry) only `lang` is set, so
+      // Windows falls back to its native OS speech engine.
+      const voice = langOnly ? null : voiceRef.current
       if (voice) utterance.voice = voice
       utterance.lang = voice?.lang ?? 'de-DE'
       utterance.rate = rateRef.current
@@ -320,6 +331,17 @@ export function AudioPlayer({
       }
 
       synth.speak(utterance)
+
+      // Windows Chromium can swallow speak() without any event. If nothing is
+      // speaking shortly after, nudge the engine once, then re-trigger once.
+      if (!langOnly && isWindowsChromium()) {
+        window.setTimeout(() => {
+          if (session !== sessionRef.current || synth.speaking) return
+          synth.resume()
+          if (synth.speaking) return
+          speak(index, charOffsetRef.current, true)
+        }, SPEAK_WATCHDOG_MS)
+      }
     },
     [],
   )
@@ -330,6 +352,11 @@ export function AudioPlayer({
     setErrorMessage(null)
 
     if (status === 'playing') {
+      if (startTimerRef.current !== null) {
+        // Paused before the delayed start fired: resume must start from scratch.
+        clearStartTimer()
+        restartOnResumeRef.current = true
+      }
       synth.pause()
       setStatus('paused')
       setAnnouncement('Pausiert')
@@ -360,13 +387,36 @@ export function AudioPlayer({
     }
     setWordCount(countWords(chunks))
     setPercent(0)
+    chunkIndexRef.current = 0
+    charOffsetRef.current = 0
     setStatus('playing')
     setAnnouncement('Wiedergabe gestartet')
-    speakFrom(0)
+
+    if (!isWindowsChromium()) {
+      speakFrom(0)
+      return
+    }
+
+    // Windows Chrome/Edge only: unlock audio with a silent utterance inside the
+    // click stack, then start from a clean slate after a short delay. Other
+    // platforms keep the synchronous start that iOS Safari requires.
+    synth.resume()
+    const unlockUtterance = new SpeechSynthesisUtterance('')
+    unlockUtterance.volume = 0
+    synth.speak(unlockUtterance)
+
+    const session = sessionRef.current
+    clearStartTimer()
+    startTimerRef.current = window.setTimeout(() => {
+      startTimerRef.current = null
+      if (session !== sessionRef.current) return
+      speakFrom(0)
+    }, CLEAN_SLATE_DELAY_MS)
   }
 
   const handleReset = () => {
     if (engine !== 'ready') return
+    clearStartTimer()
     sessionRef.current += 1
     window.speechSynthesis.cancel()
     chunkIndexRef.current = 0
@@ -385,6 +435,7 @@ export function AudioPlayer({
     setAnnouncement(ariaLabel)
 
     if (status === 'playing') {
+      clearStartTimer()
       sessionRef.current += 1
       window.speechSynthesis.cancel()
       speakFrom(chunkIndexRef.current, charOffsetRef.current)
