@@ -94,6 +94,14 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/llm-readiness-agentic-browsing',
+    category: 'AI Search & Agentic Browsing',
+    title: 'LLM-Readiness & Agentic Browsing: KI-Agenten im B2B',
+    description:
+      'Wie B2B-Unternehmen durch maschinenlesbare Datenstrukturen, JSON-LD und API-nahe Frontend-Architekturen von automatisierten Beschaffungssystemen gefunden und gewählt werden.',
+    meta: '8 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
