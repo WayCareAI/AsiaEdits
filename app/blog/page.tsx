@@ -78,6 +78,22 @@ const POSTS = [
     meta: '7 min Lesezeit',
   },
   {
+    href: '/blog/keyword-dualismus-pseo-architektur',
+    category: 'Programmatic SEO & Keyword-Strategie',
+    title: 'Keyword-Dualismus im pSEO: Webdesign vs. Website',
+    description:
+      'Wie B2B-Unternehmen durch die Unterscheidung von Agentur- und Ergebnis-Suchanfragen doppelte Reichweite ohne Duplicate Content aufbauen.',
+    meta: '7 min Lesezeit',
+  },
+  {
+    href: '/blog/b2b-conversion-ux-lead-pfade',
+    category: 'Conversion UX & Architecture',
+    title: 'B2B-Conversion-UX: Barrierefreie Lead-Pfade aufbauen',
+    description:
+      'Wie barrierefreie Nutzerführung, psychologische Vertrauensanker und reibungslose Lead-Pfade aus anonymem Traffic hochkarätige B2B-Mandate erzeugen.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',
