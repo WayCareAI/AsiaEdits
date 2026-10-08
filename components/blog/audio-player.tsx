@@ -22,8 +22,18 @@ const RATES = [
 ] as const
 
 const WORDS_PER_MINUTE = 150
-const MAX_CHUNK_LENGTH = 220
+// ~10 s of speech at 1x, safely below Chrome desktop's ~15 s auto-stop for network voices.
+const MAX_CHUNK_LENGTH = 160
 const VOICE_LOAD_TIMEOUT_MS = 1500
+const VOICE_POLL_INTERVAL_MS = 250
+const KEEP_ALIVE_INTERVAL_MS = 10000
+
+// Windows Chrome/Edge only: other platforms must not get the pause/resume nudge.
+function isWindowsChromium(): boolean {
+  if (typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent
+  return /Windows/.test(ua) && /Chrome\//.test(ua) && !/Mobile/.test(ua)
+}
 
 // Earlier entries are ranked higher. Natural/neural voices are boosted separately.
 const PREFERRED_VOICE_NAMES = [
@@ -195,8 +205,18 @@ export function AudioPlayer({
     }
 
     updateVoices()
-    synth.addEventListener('voiceschanged', updateVoices)
+    // Chrome on Windows loads system voices asynchronously and may report an
+    // empty list first; onvoiceschanged (plus a short poll) picks them up later.
+    synth.onvoiceschanged = updateVoices
+    const poll = window.setInterval(() => {
+      if (voiceRef.current) {
+        window.clearInterval(poll)
+        return
+      }
+      updateVoices()
+    }, VOICE_POLL_INTERVAL_MS)
     const timeout = window.setTimeout(() => {
+      window.clearInterval(poll)
       if (!voiceRef.current) setHasGermanVoice(false)
       setEngine((current) => (current === 'checking' ? 'ready' : current))
     }, VOICE_LOAD_TIMEOUT_MS)
@@ -209,17 +229,30 @@ export function AudioPlayer({
 
     return () => {
       window.clearTimeout(timeout)
-      synth.removeEventListener('voiceschanged', updateVoices)
+      window.clearInterval(poll)
+      synth.onvoiceschanged = null
       window.removeEventListener('pagehide', stopSpeaking)
       stopSpeaking()
     }
   }, [prepareChunks])
 
+  // Chrome on Windows silently stops network voices after ~15 s of continuous speech.
+  useEffect(() => {
+    if (status !== 'playing' || !isWindowsChromium()) return
+    const synth = window.speechSynthesis
+    const interval = window.setInterval(() => {
+      const voice = voiceRef.current
+      if (!synth.speaking || synth.paused || (voice && voice.localService)) return
+      synth.pause()
+      synth.resume()
+    }, KEEP_ALIVE_INTERVAL_MS)
+    return () => window.clearInterval(interval)
+  }, [status])
+
   const speakFrom = useCallback(
     function speak(index: number, offset = 0) {
       const synth = window.speechSynthesis
       const chunks = chunksRef.current
-      const session = sessionRef.current
 
       if (index >= chunks.length) {
         chunkIndexRef.current = 0
@@ -230,9 +263,26 @@ export function AudioPlayer({
         return
       }
 
+      // Resets Chrome desktop's audio queue to avoid silent hangs. The session is
+      // bumped first so end/error events of cancelled utterances (Safari fires
+      // `end` on cancel) can never advance playback a second time.
+      sessionRef.current += 1
+      synth.cancel()
+      if (synth.paused) synth.resume()
+      const session = sessionRef.current
+
       const chunk = chunks[index]
       chunkIndexRef.current = index
       charOffsetRef.current = offset
+
+      if (!voiceRef.current) {
+        const late = pickGermanVoice(synth.getVoices())
+        if (late) {
+          voiceRef.current = late
+          setHasGermanVoice(true)
+          setVoiceName(late.name)
+        }
+      }
 
       const utterance = new SpeechSynthesisUtterance(chunk.text.slice(offset))
       const voice = voiceRef.current
@@ -257,12 +307,16 @@ export function AudioPlayer({
         speak(index + 1)
       }
       utterance.onerror = (event) => {
+        // Every intentional cancel bumps the session, so a matching session means
+        // the browser stopped on its own and the UI must not stay in "playing".
         if (session !== sessionRef.current) return
-        if (event.error === 'canceled' || event.error === 'interrupted') return
+        sessionRef.current += 1
         setStatus('idle')
-        setErrorMessage(
-          'Die Wiedergabe wurde vom Browser unterbrochen. Bitte versuchen Sie es erneut.',
-        )
+        if (event.error !== 'canceled' && event.error !== 'interrupted') {
+          setErrorMessage(
+            'Die Wiedergabe wurde vom Browser unterbrochen. Bitte versuchen Sie es erneut.',
+          )
+        }
       }
 
       synth.speak(utterance)
