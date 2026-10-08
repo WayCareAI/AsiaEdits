@@ -126,6 +126,14 @@ const POSTS = [
     meta: '8 min Lesezeit',
   },
   {
+    href: '/blog/local-b2c-dominanz-smartphone-engagement',
+    category: 'Local SEO & B2C',
+    title: 'Local B2C SEO: Regionale Kunden mobil abholen',
+    description:
+      'Wie lokale Dienstleister, Gastronomie-Gruppen und Freizeit-Anbieter durch strukturierte Daten, Google Maps Integration und Instant-Performance die regionale Konkurrenz hinter sich lassen.',
+    meta: '7 min Lesezeit',
+  },
+  {
     href: '/blog/programmatic-seo-b2b-skalieren',
     category: 'Programmatic SEO',
     title: 'Programmatic SEO im B2B skalieren',

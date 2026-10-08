@@ -115,6 +115,13 @@ export const BLOG_POSTS: BlogPostMeta[] = [
     readingTime: '8 min Lesezeit',
   },
   {
+    slug: 'local-b2c-dominanz-smartphone-engagement',
+    cluster: 'local',
+    category: 'Local SEO & B2C',
+    title: 'Local B2C SEO: Regionale Kunden mobil abholen',
+    readingTime: '7 min Lesezeit',
+  },
+  {
     slug: 'programmatic-seo-b2b-skalieren',
     cluster: 'pseo',
     category: 'Programmatic SEO',
