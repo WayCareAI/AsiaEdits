@@ -3,6 +3,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { ReadingProgress } from '@/components/blog/reading-progress'
 import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { AudioPlayer } from '@/components/blog/audio-player'
 import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/programmatic-seo-b2b-mittelstand/article-hero'
 import { ArticleBody } from '@/components/blog/programmatic-seo-b2b-mittelstand/article-body'
@@ -73,6 +74,7 @@ export default function ProgrammaticSeoB2bMittelstandPage() {
         />
         <ArticleHero />
         <QuickTakeaways items={TAKEAWAYS} />
+        <AudioPlayer />
         <article>
           <ArticleBody />
         </article>
