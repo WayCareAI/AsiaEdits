@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/audio-ux-accessible-micro-interactions/article-hero'
 import { ArticleBody } from '@/components/blog/audio-ux-accessible-micro-interactions/article-body'
 import { AuditCta } from '@/components/blog/audio-ux-accessible-micro-interactions/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Integrierte Voice-UI und Vorlese-Player bauen Hürden für viele Nutzergruppen ab.",
+  "Audio-Player erhöhen die Verweildauer um rund 45 %.",
+  "Barrierefreie Micro-Interactions nach WCAG 2.1 AAA funktionieren auf allen Geräten.",
+  "Latenzfreie Audio-Streams halten PageSpeed 90+ trotz Zusatzfunktionen.",
+]
+
 export default function AudioUxAccessibleMicroInteractionsPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="audio-ux-accessible-micro-interactions" category="accessibility" />
         <AuditCta />
       </main>
       <SiteFooter />

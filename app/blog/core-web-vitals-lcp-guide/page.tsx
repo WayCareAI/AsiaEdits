@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/core-web-vitals-lcp-guide/article-hero'
 import { ArticleBody } from '@/components/blog/core-web-vitals-lcp-guide/article-body'
 import { AuditCta } from '@/components/blog/core-web-vitals-lcp-guide/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Ein LCP unter 1,0 Sekunden ist im B2B realistisch und ein klarer Wettbewerbsvorteil.",
+  "Schnellere Ladezeiten senken die Absprungrate um bis zu 50 %.",
+  "Unmittelbar reagierende Oberflächen steigern die Conversion um 15-20 %.",
+  "Mobile PageSpeed von 90+ ist die Grundlage für stabile Google-Spitzenplätze.",
+]
+
 export default function CoreWebVitalsLcpGuidePage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="core-web-vitals-lcp-guide" category="performance" />
         <AuditCta />
       </main>
       <SiteFooter />

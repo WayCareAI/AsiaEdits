@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/b2b-conversion-ux-lead-pfade/article-hero'
 import { ArticleBody } from '@/components/blog/b2b-conversion-ux-lead-pfade/article-body'
 import { AuditCta } from '@/components/blog/b2b-conversion-ux-lead-pfade/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Barrierefreie Nutzerführung entfernt Reibung auf dem Weg zur Anfrage.",
+  "Psychologische Vertrauensanker erhöhen die Bereitschaft zur Kontaktaufnahme.",
+  "Kurze, klare Lead-Pfade machen aus anonymem Traffic qualifizierte B2B-Mandate.",
+  "Jeder Schritt im Formular sollte messbar und konsequent optimiert werden.",
+]
+
 export default function B2bConversionUxLeadPfadePage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="b2b-conversion-ux-lead-pfade" category="conversion" />
         <AuditCta />
       </main>
       <SiteFooter />

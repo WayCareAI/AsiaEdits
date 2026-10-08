@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/programmatic-seo-b2b-mittelstand/article-hero'
 import { ArticleBody } from '@/components/blog/programmatic-seo-b2b-mittelstand/article-body'
 import { AuditCta } from '@/components/blog/programmatic-seo-b2b-mittelstand/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Mit Programmatic SEO lassen sich 100+ Branchen-Landingpages automatisiert aufbauen.",
+  "Mathematische Varianz-Matrizen halten das Duplicate-Content-Risiko bei 0 %.",
+  "Long-Tail-Nischen bringen bis zu 160 % höhere CTR durch hohe Relevanz.",
+  "Trotz großer Datenmenge bleibt die Ladezeit mit PageSpeed 90+ konstant schnell.",
+]
+
 export default function ProgrammaticSeoB2bMittelstandPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="programmatic-seo-b2b-mittelstand" category="pseo" />
         <AuditCta />
       </main>
       <SiteFooter />

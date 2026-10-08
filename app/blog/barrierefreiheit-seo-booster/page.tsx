@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { ReadingProgress } from '@/components/blog/reading-progress'
+import { QuickTakeaways } from '@/components/blog/quick-takeaways'
+import { RelatedPosts } from '@/components/blog/related-posts'
 import { ArticleHero } from '@/components/blog/barrierefreiheit-seo-booster/article-hero'
 import { ArticleBody } from '@/components/blog/barrierefreiheit-seo-booster/article-body'
 import { AuditCta } from '@/components/blog/barrierefreiheit-seo-booster/audit-cta'
@@ -51,19 +54,29 @@ const articleJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const TAKEAWAYS = [
+  "Barrierefreiheit und SEO verfolgen dieselben Ziele: klare Struktur und gute Nutzbarkeit.",
+  "Kontrast-Optimierung und semantisches HTML verbessern Nutzersignale messbar.",
+  "Audio-Features verlängern die Verweildauer und stärken das Vertrauen bei Google.",
+  "Wer 2026 barrierefrei baut, erfüllt Anforderungen und gewinnt zusätzliche Rankings.",
+]
+
 export default function BarrierefreiheitSeoBoosterPage() {
   return (
     <>
       <SiteHeader />
+      <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
         <ArticleHero />
+        <QuickTakeaways items={TAKEAWAYS} />
         <article>
           <ArticleBody />
         </article>
+        <RelatedPosts currentSlug="barrierefreiheit-seo-booster" category="accessibility" />
         <AuditCta />
       </main>
       <SiteFooter />
