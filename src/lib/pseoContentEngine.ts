@@ -1,10 +1,18 @@
 import { CityData, IndustryData } from '@/src/data/pseoDatabase'
 import { generateCityContent, type PSEOCityContent } from '@/src/lib/pseoCityContent'
 
+import {
+  generateIndustryContent,
+  PRIMARY_TECH_TERMS,
+  type PSEOIndustryContent,
+} from '@/src/lib/pseoIndustryContent'
+
 export type { PSEOCityContent } from '@/src/lib/pseoCityContent'
+export type { PSEOIndustryContent } from '@/src/lib/pseoIndustryContent'
 
 export interface PSEOContent {
   cityContent?: PSEOCityContent
+  industryContent?: PSEOIndustryContent
   metaTitle: string
   metaDescription: string
   heroTitle: string
@@ -55,17 +63,15 @@ export function generatePSEOContent(
   ]
 
   // METAS (Exact-Match Keyword Formulas: "Webdesign für [Branche]" / "Website für [Branche]" / "Webdesign [Stadt]")
+  const industryLabel = isWebsiteVariant ? 'Website' : 'Webdesign'
+
   const metaTitleOptions = isCity
     ? [`Webdesign in ${location} | PageSpeed 90+ & Festpreis – AsiaEdits`]
-    : isWebsiteVariant
-      ? [`Website für ${branchPlural} | PageSpeed 90+ & Local SEO`]
-      : [`Webdesign für ${branchPlural} | PageSpeed 90+ & Local SEO`]
+    : [`${industryLabel} für ${branchPlural} | PageSpeed 90+ & Festpreis – AsiaEdits`]
 
   const metaDescription = isCity
     ? `Webdesign in ${location}: Mobile PageSpeed 90+ & Festpreis. Jetzt Angebot anfordern!`
-    : isWebsiteVariant
-      ? `Professionelle Website für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
-      : `Professionelles Webdesign für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
+    : `${industryLabel} für ${branchPlural}: Mobile PageSpeed 90+ & Festpreis. Jetzt Angebot anfordern!`
 
   // GOLDEN CIRCLE: WHY
   const whyOptions = isCity
@@ -103,23 +109,30 @@ export function generatePSEOContent(
     `Kontinuierliches Monitoring der Core Web Vitals & Mobile PageSpeed 90+`,
   ]
 
-  const wdfKeywords = industry?.keywords
-    ? [...industry.keywords, ...techTerms, ...seoTerms]
-    : [...techTerms, ...seoTerms]
-
   const cityContent = city ? generateCityContent(city) : undefined
+  const industryContent =
+    !city && industry ? generateIndustryContent(industry, targetKeywordType) : undefined
+
+  const wdfKeywords = industryContent
+    ? [...industryContent.terminology, ...PRIMARY_TECH_TERMS]
+    : industry?.keywords
+      ? [...industry.keywords, ...techTerms, ...seoTerms]
+      : [...techTerms, ...seoTerms]
+
+  const generatedContent = cityContent ?? industryContent
 
   return {
     metaTitle: metaTitleOptions[0],
     metaDescription,
     cityContent,
-    heroTitle: cityContent
-      ? cityContent.hero.title
+    industryContent,
+    heroTitle: generatedContent
+      ? generatedContent.hero.title
       : isWebsiteVariant
         ? `Website & SEO für ${branchPlural}`
         : `Webdesign & SEO für ${branchPlural}`,
     heroSubtitle: `Garantierter Mobile PageSpeed 90+ • LCP unter 1,0 Sekunde • Inklusive SEO Local Booster Package`,
-    whyText: cityContent ? cityContent.hero.intro : whyOptions[variant],
+    whyText: generatedContent ? generatedContent.hero.intro : whyOptions[variant],
     howText: howOptions[variant],
     whatText,
     boosterTitle,
