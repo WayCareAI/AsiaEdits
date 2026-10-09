@@ -288,6 +288,12 @@ function buildContext(
 // Section 1: Hero & industry hook
 // ---------------------------------------------------------------------------
 
+const HERO_KEYWORD: Sentence[] = [
+  ({ label, p }) => `${label} für ${p} mit garantiertem PageSpeed 90+ macht aus Suchenden Anfragen.`,
+  ({ label, p }) => `${label} für ${p} beginnt mit PageSpeed 90+ auf dem Smartphone.`,
+  ({ label, p }) => `Wer ${label} für ${p} plant, braucht PageSpeed 90+ als messbare Grundlage.`,
+]
+
 const HERO_OPENER: Sentence[] = [
   ({ p, lead }) =>
     `Im Wettbewerb der ${p} entscheidet der erste Eindruck im Netz darüber, ob ${lead} anfragen oder zu einem Mitbewerber wechseln.`,
@@ -593,6 +599,7 @@ function composeIndustryContent(
 
   const heroTitle = `${x.label} für ${x.p}: Digitale ${profile.titleLead} auf Höchstniveau`
   const heroIntro = [
+    build(x, 'hero-keyword', HERO_KEYWORD),
     build(x, 'hero-opener', HERO_OPENER),
     build(x, 'hero-loss', HERO_LOSS),
     build(x, 'hero-search', HERO_SEARCH),

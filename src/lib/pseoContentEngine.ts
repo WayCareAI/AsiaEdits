@@ -66,8 +66,8 @@ export function generatePSEOContent(
   const industryLabel = isWebsiteVariant ? 'Website' : 'Webdesign'
 
   const metaTitleOptions = isCity
-    ? [`Webdesign in ${location} | PageSpeed 90+ & Festpreis – AsiaEdits`]
-    : [`${industryLabel} für ${branchPlural} | PageSpeed 90+ & Festpreis – AsiaEdits`]
+    ? [`Webdesign in ${location} | PageSpeed 90+`]
+    : [`${industryLabel} für ${branchPlural} | PageSpeed 90+`]
 
   const metaDescription = isCity
     ? `Webdesign in ${location}: Mobile PageSpeed 90+ & Festpreis. Jetzt Angebot anfordern!`
