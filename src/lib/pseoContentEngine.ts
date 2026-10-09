@@ -52,17 +52,13 @@ export function generatePSEOContent(
 
   // METAS (Exact-Match Keyword Formulas: "Webdesign für [Branche]" / "Website für [Branche]" / "Webdesign [Stadt]")
   const metaTitleOptions = isCity
-    ? [
-        `Webdesign ${location} | High-Speed Website (90+)`,
-        `Webdesign ${location} | SEO Local Booster Package`,
-        `Webdesign & SEO in ${location} | Asia Edits`,
-      ]
+    ? [`Webdesign in ${location} | PageSpeed 90+ & Festpreis – AsiaEdits`]
     : isWebsiteVariant
       ? [`Website für ${branchPlural} | PageSpeed 90+ & Local SEO`]
       : [`Webdesign für ${branchPlural} | PageSpeed 90+ & Local SEO`]
 
   const metaDescription = isCity
-    ? `Professionelles Webdesign in ${location}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot anfordern!`
+    ? `Webdesign in ${location}: Mobile PageSpeed 90+ & Festpreis. Jetzt Angebot anfordern!`
     : isWebsiteVariant
       ? `Professionelle Website für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
       : `Professionelles Webdesign für ${branchPlural}. Garantierter Mobile PageSpeed 90+, LCP < 1,0s & exklusives SEO Local Booster Package. Jetzt Angebot sichern!`
@@ -108,7 +104,7 @@ export function generatePSEOContent(
     : [...techTerms, ...seoTerms]
 
   return {
-    metaTitle: isCity ? metaTitleOptions[variant] : metaTitleOptions[0],
+    metaTitle: metaTitleOptions[0],
     metaDescription,
     heroTitle: isCity
       ? `Webdesign & SEO in ${location}`
