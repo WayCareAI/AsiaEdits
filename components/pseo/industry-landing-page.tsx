@@ -6,7 +6,8 @@ import { PseoHeader } from './pseo-header'
 import { PseoFooter } from './pseo-footer'
 import { PseoHero } from './pseo-hero'
 import { PseoContentSection } from './pseo-content-section'
-import { PseoFeatureGrid } from './pseo-feature-grid'
+import { PseoDeliverables } from './pseo-deliverables'
+import { PseoFaq } from './pseo-faq'
 import { PseoLocalBoosterCard } from './pseo-local-booster-card'
 import { PseoLinksGrid } from './pseo-links-grid'
 import { PseoLeadForm } from './pseo-lead-form'
@@ -24,6 +25,22 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
   }
 
   const content = generatePSEOContent(undefined, industry, keywordType)
+  const industryContent = content.industryContent
+
+  if (!industryContent) {
+    notFound()
+  }
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: industryContent.faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+
   const eyebrowLabel = keywordType === 'website' ? 'Website für' : 'Webdesign für'
   const ctaLabel = keywordType === 'website' ? 'Website' : 'Webdesign'
 
@@ -47,16 +64,27 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
           badges={content.wdfKeywords}
         />
         <PseoContentSection
-          id="unsere-loesung"
-          eyebrow="Wie wir es lösen"
-          heading="Unsere technische Lösung"
-          text={content.howText}
+          id="herausforderungen"
+          eyebrow="Branchen-Herausforderungen"
+          heading={industryContent.challenges.heading}
+          text={industryContent.challenges.paragraphs}
         />
-        <PseoFeatureGrid />
         <PseoContentSection
-          eyebrow="Was Du bekommst"
-          heading="Dein Komplettpaket"
-          text={content.whatText}
+          id="technische-vorteile"
+          eyebrow="Technik & Core Web Vitals"
+          heading={industryContent.tech.heading}
+          text={industryContent.tech.paragraphs}
+        />
+        <PseoDeliverables
+          heading={industryContent.deliverables.heading}
+          intro={industryContent.deliverables.intro}
+          outro={industryContent.deliverables.outro}
+          items={industryContent.deliverables.items}
+        />
+        <PseoFaq
+          heading={industryContent.faq.heading}
+          intro={industryContent.faq.intro}
+          items={industryContent.faq.items}
         />
         <PseoLocalBoosterCard title={content.boosterTitle} features={content.boosterFeatures} />
         <PseoLinksGrid
@@ -65,12 +93,18 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
           items={featuredCityItems}
         />
         <PseoLeadForm
-          heading={`${ctaLabel} für Deine ${industry.name}-Praxis anfragen`}
+          heading={`${ctaLabel} für ${industry.pluralName} anfragen`}
           description="Erzähl uns kurz von Deinem Vorhaben – wir melden uns unverbindlich innerhalb von 12 Stunden zurück."
           subjectTag={`⚡ Neue Anfrage ${ctaLabel} ${industry.name} asiaedits.com`}
         />
       </main>
       <PseoFooter />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
     </div>
   )
 }
