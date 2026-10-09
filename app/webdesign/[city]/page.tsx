@@ -6,7 +6,8 @@ import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
 import { PseoContentSection } from '@/components/pseo/pseo-content-section'
-import { PseoFeatureGrid } from '@/components/pseo/pseo-feature-grid'
+import { PseoDeliverables } from '@/components/pseo/pseo-deliverables'
+import { PseoFaq } from '@/components/pseo/pseo-faq'
 import { PseoLocalBoosterCard } from '@/components/pseo/pseo-local-booster-card'
 import { PseoLinksGrid } from '@/components/pseo/pseo-links-grid'
 import { PseoLeadForm } from '@/components/pseo/pseo-lead-form'
@@ -77,6 +78,22 @@ export default async function WebdesignCityPage({ params }: PageProps) {
         ? 'Landkreis'
         : 'Gemeinde'
 
+  const cityContent = content.cityContent
+
+  if (!cityContent) {
+    notFound()
+  }
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: cityContent.faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+
   const nearbyItems = city.nearbyCities
     .map((slug) => getCityBySlug(slug))
     .filter((c): c is NonNullable<typeof c> => Boolean(c))
@@ -98,16 +115,27 @@ export default async function WebdesignCityPage({ params }: PageProps) {
           badges={content.wdfKeywords}
         />
         <PseoContentSection
-          id="unsere-loesung"
-          eyebrow="Wie wir es lösen"
-          heading="Unsere technische Lösung"
-          text={content.howText}
+          id="wettbewerb"
+          eyebrow="Regionaler Markt"
+          heading={cityContent.market.heading}
+          text={cityContent.market.paragraphs}
         />
-        <PseoFeatureGrid />
         <PseoContentSection
-          eyebrow="Was Du bekommst"
-          heading="Dein Komplettpaket"
-          text={content.whatText}
+          id="technische-vorteile"
+          eyebrow="Technik & Core Web Vitals"
+          heading={cityContent.tech.heading}
+          text={cityContent.tech.paragraphs}
+        />
+        <PseoDeliverables
+          heading={cityContent.deliverables.heading}
+          intro={cityContent.deliverables.intro}
+          outro={cityContent.deliverables.outro}
+          items={cityContent.deliverables.items}
+        />
+        <PseoFaq
+          heading={cityContent.faq.heading}
+          intro={cityContent.faq.intro}
+          items={cityContent.faq.items}
         />
         <PseoLocalBoosterCard title={content.boosterTitle} features={content.boosterFeatures} />
         <PseoLinksGrid
@@ -122,6 +150,12 @@ export default async function WebdesignCityPage({ params }: PageProps) {
         />
       </main>
       <PseoFooter />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
     </div>
   )
 }

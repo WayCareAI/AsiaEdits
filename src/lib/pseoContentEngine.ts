@@ -1,6 +1,10 @@
 import { CityData, IndustryData } from '@/src/data/pseoDatabase'
+import { generateCityContent, type PSEOCityContent } from '@/src/lib/pseoCityContent'
+
+export type { PSEOCityContent } from '@/src/lib/pseoCityContent'
 
 export interface PSEOContent {
+  cityContent?: PSEOCityContent
   metaTitle: string
   metaDescription: string
   heroTitle: string
@@ -103,16 +107,19 @@ export function generatePSEOContent(
     ? [...industry.keywords, ...techTerms, ...seoTerms]
     : [...techTerms, ...seoTerms]
 
+  const cityContent = city ? generateCityContent(city) : undefined
+
   return {
     metaTitle: metaTitleOptions[0],
     metaDescription,
-    heroTitle: isCity
-      ? `Webdesign & SEO in ${location}`
+    cityContent,
+    heroTitle: cityContent
+      ? cityContent.hero.title
       : isWebsiteVariant
         ? `Website & SEO für ${branchPlural}`
         : `Webdesign & SEO für ${branchPlural}`,
     heroSubtitle: `Garantierter Mobile PageSpeed 90+ • LCP unter 1,0 Sekunde • Inklusive SEO Local Booster Package`,
-    whyText: whyOptions[variant],
+    whyText: cityContent ? cityContent.hero.intro : whyOptions[variant],
     howText: howOptions[variant],
     whatText,
     boosterTitle,
