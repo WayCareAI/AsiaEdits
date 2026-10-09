@@ -155,6 +155,21 @@ function buildContext(city: CityData, attempt: number): Ctx {
 // Section 1: Hero & strategic hook
 // ---------------------------------------------------------------------------
 
+const HERO_KEYWORD: Sentence[] = [
+  ({ c }) => `Webdesign in ${c} mit garantiertem PageSpeed 90+ macht aus Besuchern Anfragen.`,
+  ({ c }) => `Gutes Webdesign in ${c} beginnt mit PageSpeed 90+ auf dem Smartphone.`,
+  ({ c }) => `Wer Webdesign in ${c} plant, braucht PageSpeed 90+ als messbare Grundlage.`,
+  ({ c }) => `Modernes Webdesign in ${c} liefert PageSpeed 90+ und damit spürbar mehr Anfragen.`,
+  ({ c }) => `Webdesign in ${c} ist erst dann stark, wenn PageSpeed 90+ garantiert ist.`,
+  ({ c }) => `Unser Webdesign in ${c} setzt auf PageSpeed 90+ statt auf leere Versprechen.`,
+  ({ c }) => `Für Webdesign in ${c} gilt bei uns ein klares Ziel: PageSpeed 90+ auf Mobilgeräten.`,
+  ({ c }) => `Webdesign in ${c} mit PageSpeed 90+ verkürzt den Weg vom Klick zur Kontaktanfrage.`,
+  ({ c }) => `Professionelles Webdesign in ${c} bedeutet für uns PageSpeed 90+ ab dem ersten Release.`,
+  ({ c }) => `Wer in ${c} online gefunden werden will, braucht Webdesign mit PageSpeed 90+.`,
+  ({ c }) => `Webdesign in ${c} liefert bei uns PageSpeed 90+ als festen Bestandteil jedes Projekts.`,
+  ({ c }) => `Schnelles Webdesign in ${c} mit PageSpeed 90+ überzeugt Besucher schon beim Laden.`,
+]
+
 const HERO_OPENER: Record<CityCategory, Sentence[]> = {
   metropole: [
     ({ c }) =>
@@ -201,15 +216,6 @@ const HERO_LEGACY: Sentence[] = [
     `Legacy-CMS wie WordPress oder Typo3 erzeugen jede Seite erst beim Aufruf, Next.js auf dem Edge-Netzwerk liefert sie dagegen vorgerendert aus.`,
   () =>
     `Wo WordPress und Typo3 unter Plugin-Ballast leiden, setzt unsere Next.js-Edge-Architektur auf schlanken Code und vorgerenderte Seiten.`,
-]
-
-const HERO_CLOSER: Sentence[] = [
-  ({ c }) =>
-    `Webdesign ${c} bedeutet bei AsiaEdits: Geschwindigkeit, Mobile Conversion UX und messbare Ergebnisse statt reiner Optik.`,
-  ({ c }) =>
-    `Website erstellen ${c} heißt für uns, Performance und Lead-Generierung von Anfang an gemeinsam zu planen.`,
-  ({ c }) =>
-    `Als Next.js Agentur verstehen wir Webdesign ${c} als Wachstumsinstrument und nicht als digitale Visitenkarte.`,
 ]
 
 // ---------------------------------------------------------------------------
@@ -516,11 +522,11 @@ function composeCityContent(city: CityData, attempt: number): PSEOCityContent {
 
   const heroTitle = `Webdesign in ${x.c}: Blitzschnelle Web-Interfaces für digitale Marktführer`
   const heroIntro = [
+    build(x, 'hero-keyword', HERO_KEYWORD),
     buildByCategory(x, 'hero-opener', HERO_OPENER),
     build(x, 'hero-loss', HERO_LOSS),
     build(x, 'hero-nearby', HERO_NEARBY),
     build(x, 'hero-legacy', HERO_LEGACY),
-    build(x, 'hero-closer', HERO_CLOSER),
   ].join(' ')
 
   const market: PSEOCityTextSection = {
