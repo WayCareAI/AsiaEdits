@@ -67,7 +67,7 @@ export function FriseurSolutionSection() {
             return (
               <div
                 key={item.title}
-                className="flex gap-4 rounded-xl border border-slate-800 bg-card p-6"
+                className="flex gap-4 rounded-xl border border-border bg-card p-6"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-heading text-sm font-bold text-primary">
                   {index + 1}

@@ -54,10 +54,10 @@ export function HandwerkerComparisonTableSection() {
           langfristig auszahlt.
         </p>
 
-        <div className="mt-8 w-full max-w-full overflow-x-auto rounded-xl border border-slate-800">
+        <div className="mt-8 w-full max-w-full overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[640px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-card/60">
+              <tr className="border-b border-border bg-card/60">
                 <th className="px-4 py-4 font-heading font-semibold text-foreground sm:px-6">
                   Kriterium / Anforderung
                 </th>
@@ -75,7 +75,7 @@ export function HandwerkerComparisonTableSection() {
                   key={row.criterion}
                   className={
                     index !== COMPARISON_ROWS.length - 1
-                      ? 'border-b border-slate-800/60'
+                      ? 'border-b border-border/60'
                       : ''
                   }
                 >

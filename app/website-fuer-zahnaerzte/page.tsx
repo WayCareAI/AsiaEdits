@@ -59,7 +59,7 @@ const breadcrumbSchema = buildBreadcrumbList([
 
 export default function WebsiteFuerZahnaerztePage() {
   return (
-    <>
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden">
         <JsonLd data={breadcrumbSchema} />
@@ -74,6 +74,6 @@ export default function WebsiteFuerZahnaerztePage() {
         <ZahnarztFinalCtaSection />
       </main>
       <SiteFooter />
-    </>
+    </div>
   )
 }

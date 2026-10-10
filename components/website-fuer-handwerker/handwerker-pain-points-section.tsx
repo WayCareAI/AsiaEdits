@@ -57,7 +57,7 @@ export function HandwerkerPainPointsSection() {
             return (
               <div
                 key={point.title}
-                className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-card/60 p-6"
+                className="flex flex-col gap-3 rounded-xl border border-border bg-card/60 p-6"
               >
                 <span className="flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
                   <Icon className="size-5" />

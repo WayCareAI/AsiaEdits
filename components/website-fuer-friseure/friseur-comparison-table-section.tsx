@@ -55,10 +55,10 @@ export function FriseurComparisonTableSection() {
           zusätzlichen Terminanfragen im Monat vollständig amortisiert.
         </p>
 
-        <div className="mt-8 overflow-x-auto rounded-xl border border-slate-800">
+        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[640px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-card">
+              <tr className="border-b border-border bg-card">
                 <th className="px-4 py-4 font-heading font-semibold text-foreground sm:px-6">
                   Kriterium / Anforderung
                 </th>
@@ -78,16 +78,16 @@ export function FriseurComparisonTableSection() {
                     index % 2 === 0 ? 'bg-transparent' : 'bg-card/40'
                   }
                 >
-                  <td className="border-t border-slate-800 px-4 py-4 font-medium text-foreground sm:px-6">
+                  <td className="border-t border-border px-4 py-4 font-medium text-foreground sm:px-6">
                     {row.criterion}
                   </td>
-                  <td className="border-t border-slate-800 px-4 py-4 text-muted-foreground sm:px-6">
+                  <td className="border-t border-border px-4 py-4 text-muted-foreground sm:px-6">
                     <span className="flex items-start gap-2">
                       <X className="mt-0.5 size-4 shrink-0 text-destructive" />
                       {row.classic}
                     </span>
                   </td>
-                  <td className="border-t border-slate-800 px-4 py-4 font-semibold text-foreground sm:px-6">
+                  <td className="border-t border-border px-4 py-4 font-semibold text-foreground sm:px-6">
                     <span className="flex items-start gap-2">
                       <Check className="mt-0.5 size-4 shrink-0 text-primary" />
                       {row.asiaedits}

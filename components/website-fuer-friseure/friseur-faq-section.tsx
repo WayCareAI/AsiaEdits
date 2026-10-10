@@ -40,7 +40,7 @@ export function FriseurFaqSection() {
           {FAQS.map((faq) => (
             <div
               key={faq.id}
-              className="rounded-xl border border-slate-800 bg-card p-6"
+              className="rounded-xl border border-border bg-card p-6"
             >
               <h3
                 id={faq.id}
