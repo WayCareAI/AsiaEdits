@@ -42,14 +42,14 @@ const FEATURES = [
 
 export function PseoFeatureGrid() {
   return (
-    <section id="technische-vorteile" className="bg-[#F9FAFB] py-16 sm:py-24">
+    <section id="technische-vorteile" className="border-y border-border bg-card/30 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-xl">
-            <span className="text-sm font-medium tracking-wide text-gray-500 uppercase">
+            <span className="text-sm font-medium tracking-wide text-primary uppercase">
               Technik im Detail
             </span>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="mt-3 text-balance font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Wie wir Deine Website technisch überlegen machen
             </h2>
           </div>
@@ -60,15 +60,15 @@ export function PseoFeatureGrid() {
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="rounded-2xl border border-gray-200 bg-white p-6"
+              className="rounded-2xl border border-border bg-card/50 p-6"
             >
-              <span className="flex size-10 items-center justify-center rounded-lg bg-gray-100 text-gray-900">
-                <Icon className="size-5" />
+              <span className="flex size-10 items-center justify-center rounded-lg border border-primary/40 bg-primary/5 text-primary">
+                <Icon className="size-5" aria-hidden="true" />
               </span>
-              <h3 className="mt-4 text-base font-semibold text-gray-900">
+              <h3 className="mt-4 text-base font-semibold text-foreground">
                 {title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {description}
               </p>
             </div>

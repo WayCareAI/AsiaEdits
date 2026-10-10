@@ -53,7 +53,7 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
     }))
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-background text-foreground">
       <PseoHeader />
       <main>
         <PseoHero
