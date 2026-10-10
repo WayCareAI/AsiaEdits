@@ -34,7 +34,7 @@ export const PRIMARY_TECH_TERMS = [
   'Next.js Agentur',
   'PageSpeed 90+',
   'Server-Side Rendering',
-  'Vercel Edge CDN',
+  'Globale Edge-Infrastruktur',
   'Schema.org JSON-LD Markup',
 ] as const
 
@@ -421,11 +421,11 @@ const T_SPEED: Sentence[] = [
 
 const T_EDGE: Sentence[] = [
   ({ p, mobileMoment }) =>
-    `Über das Vercel Edge CDN liefern wir die Seiten der ${p} aus einem Rechenzentrum in Ihrer Nähe aus, sodass sie ${mobileMoment} ohne Verzögerung erscheinen.`,
+    `Über unsere globale Edge-Infrastruktur liefern wir die Seiten der ${p} aus einem Rechenzentrum in Ihrer Nähe aus, sodass sie ${mobileMoment} ohne Verzögerung erscheinen.`,
   ({ lead, mobileMoment }) =>
-    `Das Vercel Edge CDN verteilt Ihre Website auf Edge-Knoten und hält die Antwortzeiten niedrig, selbst wenn ${lead} ${mobileMoment} nur schwaches Mobilfunknetz haben.`,
+    `Das Enterprise-Edge-Netzwerk verteilt Ihre Website auf Edge-Knoten und hält die Antwortzeiten niedrig, selbst wenn ${lead} ${mobileMoment} nur schwaches Mobilfunknetz haben.`,
   ({ lead, kw0 }) =>
-    `Dank Vercel Edge CDN und intelligentem Edge Caching bleibt Ihre Seite auch bei Lastspitzen schnell, etwa wenn viele ${lead} gleichzeitig nach „${kw0}“ suchen.`,
+    `Dank hochverfügbarer Server-Architektur und intelligentem Edge Caching bleibt Ihre Seite auch bei Lastspitzen schnell, etwa wenn viele ${lead} gleichzeitig nach „${kw0}“ suchen.`,
 ]
 
 const T_IMAGES: Sentence[] = [
@@ -573,7 +573,7 @@ const F_ITEMS: {
       ({ p }) =>
         `Wir garantieren einen Mobile PageSpeed Score von 90+ und messen ihn nach dem Launch. Dazu kommen ein transparenter Festpreis, DSGVO-konforme Technik und Barrierefreiheit nach WCAG 2.1, die gerade für ${p} wichtig sind.`,
       ({ p }) =>
-        `Zugesichert sind PageSpeed 90+ auf Mobilgeräten, ein Festpreis ohne versteckte Kosten und eine Technik auf Basis von Next.js und Vercel Edge CDN. Weicht ein Wert ab, bessern wir für ${p} kostenlos nach.`,
+        `Zugesichert sind PageSpeed 90+ auf Mobilgeräten, ein Festpreis ohne versteckte Kosten und eine moderne Next.js Enterprise-Architektur mit globaler Serverless Edge-Auslieferung. Weicht ein Wert ab, bessern wir für ${p} kostenlos nach.`,
       ({ p }) =>
         `Sie erhalten schriftlich PageSpeed 90+, einen fixen Preis und eine saubere Umsetzung mit Schema.org Markup. Sollte der Messwert nach dem Launch abweichen, optimieren wir die Seite der ${p} nach, bis er stimmt.`,
     ],

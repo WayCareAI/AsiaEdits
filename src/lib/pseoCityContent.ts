@@ -333,9 +333,9 @@ const TECH_LCP: Sentence[] = [
 
 const TECH_EDGE: Sentence[] = [
   ({ c }) =>
-    `Durch feste Platzhalter für Bilder und Schriften entsteht kein Layout Shift (CLS 0), und das Vercel Edge CDN liefert Inhalte aus einem Knoten nahe ${c}.`,
+    `Durch feste Platzhalter für Bilder und Schriften entsteht kein Layout Shift (CLS 0), und die globale Edge-Infrastruktur liefert Inhalte aus einem Knoten nahe ${c}.`,
   ({ c, n0 }) =>
-    `Weil nichts verspringt, bleibt der CLS bei null, und das globale Vercel Edge CDN bedient Besucher aus ${c} und ${n0} vom nächstgelegenen Standort.`,
+    `Weil nichts verspringt, bleibt der CLS bei null, und das globale Enterprise-Edge-Netzwerk bedient Besucher aus ${c} und ${n0} vom nächstgelegenen Standort.`,
   ({ c, n1 }) =>
     `Reservierter Platz für alle Elemente verhindert Layout Shifts, und verteilte Edge-Server beschleunigen jeden Aufruf aus ${c} und ${n1}.`,
 ]

@@ -165,7 +165,8 @@ export function ArticleBody() {
         <H3>Die Umsetzung durch AsiaEdits</H3>
         <P>
           AsiaEdits konzipierte und entwickelte die gesamte digitale Plattform
-          auf Basis von Next.js, Tailwind CSS und Vercel Edge:
+          auf Basis einer Next.js Enterprise-Architektur mit globaler
+          Serverless Edge-Auslieferung:
         </P>
         <Steps>
           <Step index={1}>
