@@ -114,6 +114,38 @@ const structuredData = {
   },
 }
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://asiaedits.com/#organization',
+  name: 'AsiaEdits',
+  url: 'https://asiaedits.com',
+  logo: 'https://asiaedits.com/icon.png',
+  description:
+    'Spezialisierte Webdesign-Agentur für blitzschnelle Next.js Web-Interfaces, Headless Architecture und WordPress-Alternativen mit garantierter PageSpeed 90+ Performance.',
+  slogan: 'WordPress Alternative 2026: Next.js Webdesign ab 199 €',
+  knowsAbout: [
+    'Webdesign',
+    'Next.js Development',
+    'PageSpeed Optimization',
+    'Core Web Vitals',
+    'Headless CMS',
+    'Programmatic SEO',
+    'Generative Engine Optimization (GEO)',
+    'Conversion Rate Optimization',
+  ],
+  sameAs: [
+    'https://www.tiktok.com/@asia.edits59',
+    'https://github.com/asiaedits',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer support',
+    email: 'john@asiaedits.com',
+    availableLanguage: ['German', 'English'],
+  },
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -129,6 +161,12 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
       </head>
       <body className="relative w-full max-w-full overflow-x-hidden font-sans antialiased">
