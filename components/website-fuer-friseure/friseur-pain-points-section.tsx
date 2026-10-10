@@ -58,7 +58,7 @@ export function FriseurPainPointsSection() {
             return (
               <div
                 key={point.title}
-                className="rounded-xl border border-slate-800 bg-card p-6"
+                className="rounded-xl border border-border bg-card p-6"
               >
                 <div className="flex size-10 items-center justify-center rounded-lg bg-destructive/10">
                   <Icon className="size-5 text-destructive" />

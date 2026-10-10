@@ -49,7 +49,7 @@ export function ZahnarztFaqSection() {
           {FAQ_ITEMS.map((item) => (
             <div
               key={item.id}
-              className="rounded-xl border border-slate-800 bg-card/60 p-6"
+              className="rounded-xl border border-border bg-card/60 p-6"
             >
               <h3
                 id={item.id}
