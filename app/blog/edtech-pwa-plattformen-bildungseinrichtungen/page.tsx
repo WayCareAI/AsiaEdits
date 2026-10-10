@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBlogPosting, buildBreadcrumbList } from '@/src/lib/schema'
 import { ReadingProgress } from '@/components/blog/reading-progress'
 import { QuickTakeaways } from '@/components/blog/quick-takeaways'
 import { AudioPlayer } from '@/components/blog/audio-player'
@@ -43,18 +45,18 @@ export const metadata: Metadata = {
   },
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: TITLE,
+const blogPostingSchema = buildBlogPosting({
+  title: TITLE,
   description: DESCRIPTION,
-  articleSection: 'EdTech & PWA',
+  url: URL,
+  section: 'EdTech & PWA',
   datePublished: '2026-10-01',
-  inLanguage: 'de-DE',
-  mainEntityOfPage: URL,
-  author: { '@type': 'Organization', name: 'AsiaEdits' },
-  publisher: { '@type': 'Organization', name: 'AsiaEdits' },
-}
+})
+
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Blog', path: '/blog' },
+  { name: TITLE, path: URL },
+])
 
 const TAKEAWAYS = [
   'Träge Portale, App-Store-Installationen und fehlende Geräte-Kompatibilität bremsen EdTech im Alltag; entscheidend sind Einfachheit und Geschwindigkeit, denn nur was in Sekunden startet, wird genutzt.',
@@ -69,10 +71,8 @@ export default function EdtechPwaPlattformenBildungseinrichtungenPage() {
       <SiteHeader />
       <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-        />
+        <JsonLd data={blogPostingSchema} />
+        <JsonLd data={breadcrumbSchema} />
         <ArticleHero />
         <QuickTakeaways items={TAKEAWAYS} />
         <AudioPlayer />

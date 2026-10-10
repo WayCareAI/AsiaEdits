@@ -1,9 +1,16 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
+
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Datenschutz', path: '/datenschutz' },
+])
 
 export default function DatenschutzPage() {
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-4 py-20 sm:px-6">
+      <JsonLd data={breadcrumbSchema} />
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"

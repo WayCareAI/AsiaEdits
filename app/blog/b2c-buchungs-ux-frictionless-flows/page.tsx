@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBlogPosting, buildBreadcrumbList } from '@/src/lib/schema'
 import { ReadingProgress } from '@/components/blog/reading-progress'
 import { QuickTakeaways } from '@/components/blog/quick-takeaways'
 import { AudioPlayer } from '@/components/blog/audio-player'
@@ -42,18 +44,18 @@ export const metadata: Metadata = {
   },
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: TITLE,
+const blogPostingSchema = buildBlogPosting({
+  title: TITLE,
   description: DESCRIPTION,
-  articleSection: 'B2C UX & Conversion',
+  url: URL,
+  section: 'B2C UX & Conversion',
   datePublished: '2026-10-01',
-  inLanguage: 'de-DE',
-  mainEntityOfPage: URL,
-  author: { '@type': 'Organization', name: 'AsiaEdits' },
-  publisher: { '@type': 'Organization', name: 'AsiaEdits' },
-}
+})
+
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Blog', path: '/blog' },
+  { name: TITLE, path: URL },
+])
 
 const TAKEAWAYS = [
   'Ein hürdenfreier Buchungsweg führt in weniger als 3 Klicks vom Besuch zum Termin.',
@@ -68,10 +70,8 @@ export default function B2cBuchungsUxFrictionlessFlowsPage() {
       <SiteHeader />
       <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-        />
+        <JsonLd data={blogPostingSchema} />
+        <JsonLd data={breadcrumbSchema} />
         <ArticleHero />
         <QuickTakeaways items={TAKEAWAYS} />
         <AudioPlayer />

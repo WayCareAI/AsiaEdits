@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
 import { ArticleHero } from '@/components/wordpress-alternative/article-hero'
 import { PainPointsSection } from '@/components/wordpress-alternative/pain-points-section'
 import { ModernAlternativeSection } from '@/components/wordpress-alternative/modern-alternative-section'
@@ -42,11 +44,16 @@ export const metadata: Metadata = {
   },
 }
 
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'WordPress Alternative', path: '/wordpress-alternative' },
+])
+
 export default function WordPressAlternativePage() {
   return (
     <>
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden">
+        <JsonLd data={breadcrumbSchema} />
         <ArticleHero />
         <div className="prose prose-invert mx-auto max-w-4xl px-4 py-12 sm:px-6">
           <PainPointsSection />

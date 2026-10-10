@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
 import { AboutHero } from '@/components/ueber-uns/about-hero'
 import { AboutBody } from '@/components/ueber-uns/about-body'
 import { AboutCta } from '@/components/ueber-uns/about-cta'
@@ -50,6 +52,10 @@ const aboutJsonLd = {
   publisher: { '@type': 'Organization', name: 'AsiaEdits' },
 }
 
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Über uns', path: '/ueber-uns' },
+])
+
 export default function UeberUnsPage() {
   return (
     <>
@@ -59,6 +65,7 @@ export default function UeberUnsPage() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
         />
+        <JsonLd data={breadcrumbSchema} />
         <AboutHero />
         <article>
           <AboutBody />
