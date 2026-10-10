@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBlogPosting, buildBreadcrumbList } from '@/src/lib/schema'
 import { ReadingProgress } from '@/components/blog/reading-progress'
 import { QuickTakeaways } from '@/components/blog/quick-takeaways'
 import { AudioPlayer } from '@/components/blog/audio-player'
@@ -43,18 +45,18 @@ export const metadata: Metadata = {
   },
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: TITLE,
+const blogPostingSchema = buildBlogPosting({
+  title: TITLE,
   description: DESCRIPTION,
-  articleSection: 'Local SEO & B2C',
+  url: URL,
+  section: 'Local SEO & B2C',
   datePublished: '2026-10-01',
-  inLanguage: 'de-DE',
-  mainEntityOfPage: URL,
-  author: { '@type': 'Organization', name: 'AsiaEdits' },
-  publisher: { '@type': 'Organization', name: 'AsiaEdits' },
-}
+})
+
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Blog', path: '/blog' },
+  { name: TITLE, path: URL },
+])
 
 const TAKEAWAYS = [
   'Über 80 % der lokalen B2C-Suchanfragen laufen mobil, und das Local Pack zieht die meisten Anrufe und Reservierungen auf sich.',
@@ -69,10 +71,8 @@ export default function LocalB2cDominanzSmartphoneEngagementPage() {
       <SiteHeader />
       <ReadingProgress />
       <main className="relative w-full max-w-full overflow-x-hidden">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-        />
+        <JsonLd data={blogPostingSchema} />
+        <JsonLd data={breadcrumbSchema} />
         <ArticleHero />
         <QuickTakeaways items={TAKEAWAYS} />
         <AudioPlayer />

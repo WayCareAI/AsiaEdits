@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
 import { FriseurHero } from '@/components/website-fuer-friseure/friseur-hero'
 import { FriseurPainPointsSection } from '@/components/website-fuer-friseure/friseur-pain-points-section'
 import { FriseurSolutionSection } from '@/components/website-fuer-friseure/friseur-solution-section'
@@ -50,11 +52,16 @@ export const metadata: Metadata = {
   },
 }
 
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Website für Friseure', path: '/website-fuer-friseure' },
+])
+
 export default function WebsiteFuerFriseurePage() {
   return (
     <>
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden">
+        <JsonLd data={breadcrumbSchema} />
         <FriseurHero />
         <div className="prose prose-invert mx-auto max-w-4xl px-4 py-12 sm:px-6">
           <FriseurPainPointsSection />

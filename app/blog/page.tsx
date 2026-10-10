@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
 
 const TITLE = 'Blog & Case Studies | asiaedits.com'
 const DESCRIPTION =
@@ -175,11 +177,14 @@ const POSTS = [
   },
 ]
 
+const breadcrumbSchema = buildBreadcrumbList([{ name: 'Blog', path: '/blog' }])
+
 export default function BlogIndexPage() {
   return (
     <>
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden px-4 pt-32 pb-24 sm:px-6 lg:px-8">
+        <JsonLd data={breadcrumbSchema} />
         <div className="mx-auto max-w-4xl">
           <header className="mb-12 text-center">
             <p className="mb-3 text-sm font-medium tracking-wide text-primary uppercase">

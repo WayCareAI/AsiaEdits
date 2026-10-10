@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
+import { buildBreadcrumbList } from '@/src/lib/schema'
 import { ZahnarztHero } from '@/components/website-fuer-zahnaerzte/zahnarzt-hero'
 import { ZahnarztPainPointsSection } from '@/components/website-fuer-zahnaerzte/zahnarzt-pain-points-section'
 import { ZahnarztSolutionSection } from '@/components/website-fuer-zahnaerzte/zahnarzt-solution-section'
@@ -51,11 +53,16 @@ export const metadata: Metadata = {
   },
 }
 
+const breadcrumbSchema = buildBreadcrumbList([
+  { name: 'Website für Zahnärzte', path: '/website-fuer-zahnaerzte' },
+])
+
 export default function WebsiteFuerZahnaerztePage() {
   return (
     <>
       <SiteHeader />
       <main className="relative w-full max-w-full overflow-x-hidden">
+        <JsonLd data={breadcrumbSchema} />
         <ZahnarztHero />
         <div className="prose prose-invert mx-auto max-w-4xl px-4 py-12 sm:px-6">
           <ZahnarztPainPointsSection />
