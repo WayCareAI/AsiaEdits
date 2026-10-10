@@ -18,9 +18,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Website erstellen lassen vom Freelancer | High-Speed Webdesign asiaedits',
+  title: 'Website erstellen lassen vom Freelancer | AsiaEdits',
   description:
-    'Moderne Websites ohne WordPress-Frust. Blitzschnell (90+ PageSpeed), SEO-optimiert & flexibel ab 199 €.',
+    'Professionell eine Website erstellen lassen vom Freelancer: Blitzschnelles Next.js Webdesign, PageSpeed 90+ & Festpreis ab 199 €. Jetzt anfragen!',
   generator: 'v0.app',
   metadataBase: new URL('https://asiaedits.com'),
   alternates: {
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     apple: '/icon.png',
   },
   openGraph: {
-    title: 'asiaedits.com | High-Speed Webdesign & Development',
+    title: 'Website erstellen lassen vom Freelancer | AsiaEdits',
     description:
-      'Garantierte 90+ PageSpeed Performance & SEO-Optimierung ohne Agenturaufschlag.',
+      'Professionell eine Website erstellen lassen vom Freelancer: Blitzschnelles Next.js Webdesign, PageSpeed 90+ & Festpreis ab 199 €. Jetzt anfragen!',
     url: 'https://asiaedits.com',
     siteName: 'asiaedits.com',
     images: [
@@ -66,8 +66,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'asiaedits.com | High-Speed Webdesign',
-    description: 'Moderne Websites mit 90+ PageSpeed Garantie.',
+    title: 'Website erstellen lassen vom Freelancer | AsiaEdits',
+    description:
+      'Professionell eine Website erstellen lassen vom Freelancer: Blitzschnelles Next.js Webdesign, PageSpeed 90+ & Festpreis ab 199 €. Jetzt anfragen!',
     images: ['/opengraph-image.png'],
   },
 }
