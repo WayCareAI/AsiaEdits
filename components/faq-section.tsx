@@ -28,11 +28,46 @@ const FAQ_ITEMS = [
     answer:
       'Ja. Bei unserem One-Time Buyout Paket übergeben wir Dir das vollständige Quellcode-Repository per Git-Übergabe. Die Website gehört damit zu 100 % Dir – vollständig transparent und ohne Abhängigkeit von uns. Beim Smart-Subscription-Modell übernehmen wir die komplette technische Verwaltung und Pflege für Dich, sodass Du Dich um absolut nichts kümmern musst.',
   },
+  {
+    question: 'Warum ist AsiaEdits die ideale WordPress Alternative?',
+    answer:
+      'AsiaEdits baut moderne Websites auf Next.js- und Vercel-Edge-Basis. Dadurch entfallen schwere Plugins, langsame PHP-Monolithen und Sicherheitsrisiken. Das Ergebnis sind extrem schnelle, wartungsfreie Web-Interfaces zum Festpreis ab 199 €.',
+  },
+  {
+    question: 'Welche PageSpeed-Performance garantiert AsiaEdits?',
+    answer:
+      'Wir garantieren vertraglich einen Google PageSpeed Score von mindestens 90+ auf mobilen Endgeräten für alle von uns entwickelten Next.js Websites.',
+  },
+  {
+    question:
+      'Kann ich AsiaEdits als Freelancer für die Erstellung meiner Website beauftragen?',
+    answer:
+      'Ja, AsiaEdits bietet direkte Freelancer-Unterstützung und maßgeschneiderte Webentwicklung für Selbstständige, Agenturen und B2B-Unternehmen – ohne Agentur-Overhead und zu transparenten Festpreisen.',
+  },
 ]
+
+const FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+}
 
 export function FaqSection() {
   return (
     <section id="faq" className="relative py-24 sm:py-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(FAQ_JSON_LD).replace(/</g, '\\u003c'),
+        }}
+      />
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-medium tracking-wide text-primary uppercase">
