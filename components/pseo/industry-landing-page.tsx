@@ -2,6 +2,16 @@ import { notFound } from 'next/navigation'
 import { getIndustryBySlug, ALL_CITIES } from '@/src/data/pseoDatabase'
 import { generatePSEOContent } from '@/src/lib/pseoContentEngine'
 import type { IndustryKeywordType } from '@/src/lib/industryMetadata'
+import { hasGeoEntity } from '@/src/lib/pseo-data'
+import {
+  SITE_URL,
+  buildBreadcrumbList,
+  buildFaqPage,
+  buildGraph,
+  buildService,
+} from '@/src/lib/schema'
+import { JsonLd } from '@/components/json-ld'
+import { GeoDirectAnswer } from '@/components/geo-direct-answer'
 import { PseoHeader } from './pseo-header'
 import { PseoFooter } from './pseo-footer'
 import { PseoHero } from './pseo-hero'
@@ -31,18 +41,27 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
     notFound()
   }
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: industryContent.faq.items.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
-    })),
-  }
-
   const eyebrowLabel = keywordType === 'website' ? 'Website für' : 'Webdesign für'
   const ctaLabel = keywordType === 'website' ? 'Website' : 'Webdesign'
+
+  const geoSlug = `${keywordType}-${industrySlug}`
+  const pagePath = `/branchen/${geoSlug}`
+  const pageTitle = `${eyebrowLabel} ${industry.pluralName}`
+
+  const { '@context': _context, ...breadcrumbNode } = buildBreadcrumbList([
+    { name: pageTitle, path: pagePath },
+  ])
+  const pageSchema = buildGraph([
+    buildService({
+      name: pageTitle,
+      description: content.heroSubtitle,
+      url: `${SITE_URL}${pagePath}`,
+      serviceType: ctaLabel,
+      areaServed: 'Deutschland',
+    }),
+    buildFaqPage(industryContent.faq.items),
+    breadcrumbNode,
+  ])
 
   const featuredCityItems = ALL_CITIES.filter((c) => c.regionType === 'city')
     .slice(0, 6)
@@ -63,6 +82,7 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
           whyText={content.whyText}
           badges={content.wdfKeywords}
         />
+        {hasGeoEntity(geoSlug) && <GeoDirectAnswer slug={geoSlug} />}
         <PseoContentSection
           id="herausforderungen"
           eyebrow="Branchen-Herausforderungen"
@@ -99,12 +119,7 @@ export function IndustryLandingPage({ industrySlug, keywordType }: IndustryLandi
         />
       </main>
       <PseoFooter />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c'),
-        }}
-      />
+      <JsonLd data={pageSchema} />
     </div>
   )
 }

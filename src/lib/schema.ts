@@ -64,6 +64,51 @@ export function buildTechArticle({ headline, description, url }: TechArticleInpu
   }
 }
 
+export type ServiceInput = {
+  name: string
+  description: string
+  url: string
+  /** Free-text service category, e.g. "Webdesign". */
+  serviceType: string
+  /** Human-readable area, e.g. a city name or "Deutschland". */
+  areaServed: string
+}
+
+/** Node for use inside an `@graph`, so it carries no `@context` of its own. */
+export function buildService({ name, description, url, serviceType, areaServed }: ServiceInput) {
+  return {
+    '@type': 'Service',
+    name,
+    description,
+    url,
+    serviceType,
+    areaServed,
+    inLanguage: 'de-DE',
+    provider: {
+      '@type': 'Organization',
+      name: ORGANIZATION_NAME,
+      url: SITE_URL,
+    },
+  }
+}
+
+export type FaqItem = {
+  question: string
+  answer: string
+}
+
+/** Node for use inside an `@graph`, so it carries no `@context` of its own. */
+export function buildFaqPage(items: FaqItem[]) {
+  return {
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+}
+
 /** Combines nodes into one `@graph` document with a single `@context`. */
 export function buildGraph(nodes: Record<string, unknown>[]) {
   return {

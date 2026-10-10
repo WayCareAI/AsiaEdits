@@ -2,6 +2,15 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getCityBySlug, getAllCitySlugs } from '@/src/data/pseoDatabase'
 import { generatePSEOContent } from '@/src/lib/pseoContentEngine'
+import {
+  SITE_URL,
+  buildBreadcrumbList,
+  buildFaqPage,
+  buildGraph,
+  buildService,
+} from '@/src/lib/schema'
+import { JsonLd } from '@/components/json-ld'
+import { GeoDirectAnswer } from '@/components/geo-direct-answer'
 import { PseoHeader } from '@/components/pseo/pseo-header'
 import { PseoFooter } from '@/components/pseo/pseo-footer'
 import { PseoHero } from '@/components/pseo/pseo-hero'
@@ -84,15 +93,23 @@ export default async function WebdesignCityPage({ params }: PageProps) {
     notFound()
   }
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: cityContent.faq.items.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
-    })),
-  }
+  const pagePath = `/webdesign/${city.slug}`
+  const pageTitle = `Webdesign ${city.name}`
+
+  const { '@context': _context, ...breadcrumbNode } = buildBreadcrumbList([
+    { name: pageTitle, path: pagePath },
+  ])
+  const pageSchema = buildGraph([
+    buildService({
+      name: pageTitle,
+      description: content.heroSubtitle,
+      url: `${SITE_URL}${pagePath}`,
+      serviceType: 'Webdesign',
+      areaServed: city.name,
+    }),
+    buildFaqPage(cityContent.faq.items),
+    breadcrumbNode,
+  ])
 
   const nearbyItems = city.nearbyCities
     .map((slug) => getCityBySlug(slug))
@@ -114,6 +131,7 @@ export default async function WebdesignCityPage({ params }: PageProps) {
           whyText={content.whyText}
           badges={content.wdfKeywords}
         />
+        <GeoDirectAnswer slug={city.slug} displayName={city.name} />
         <PseoContentSection
           id="wettbewerb"
           eyebrow="Regionaler Markt"
@@ -150,12 +168,7 @@ export default async function WebdesignCityPage({ params }: PageProps) {
         />
       </main>
       <PseoFooter />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c'),
-        }}
-      />
+      <JsonLd data={pageSchema} />
     </div>
   )
 }
