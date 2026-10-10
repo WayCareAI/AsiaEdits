@@ -74,7 +74,7 @@ async function synthesize(
 }
 
 // GET is what the player uses: identical URLs are cached by the browser and the
-// Vercel CDN, so every chunk of an article is generated only once.
+// edge CDN, so every chunk of an article is generated only once.
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   return synthesize(request, searchParams.get('text'), searchParams.get('voice'))

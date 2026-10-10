@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   title: 'Website erstellen lassen vom Freelancer | AsiaEdits',
   description:
     'Professionell eine Website erstellen lassen vom Freelancer: Blitzschnelles Next.js Webdesign, PageSpeed 90+ & Festpreis ab 199 €. Jetzt anfragen!',
-  generator: 'v0.app',
   metadataBase: new URL('https://asiaedits.com'),
   alternates: {
     canonical: 'https://asiaedits.com',

@@ -31,7 +31,7 @@ const FAQ_ITEMS = [
   {
     question: 'Warum ist AsiaEdits die ideale WordPress Alternative?',
     answer:
-      'AsiaEdits baut moderne Websites auf Next.js- und Vercel-Edge-Basis. Dadurch entfallen schwere Plugins, langsame PHP-Monolithen und Sicherheitsrisiken. Das Ergebnis sind extrem schnelle, wartungsfreie Web-Interfaces zum Festpreis ab 199 €.',
+      'AsiaEdits baut moderne Websites auf einer Next.js Enterprise-Architektur mit globaler Serverless Edge-Auslieferung. Dadurch entfallen schwere Plugins, langsame PHP-Monolithen und Sicherheitsrisiken. Das Ergebnis sind extrem schnelle, wartungsfreie Web-Interfaces zum Festpreis ab 199 €.',
   },
   {
     question: 'Welche PageSpeed-Performance garantiert AsiaEdits?',
