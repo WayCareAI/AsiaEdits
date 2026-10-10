@@ -33,6 +33,45 @@ export function buildBreadcrumbList(trail: BreadcrumbCrumb[]) {
   }
 }
 
+export type TechArticleInput = {
+  headline: string
+  description: string
+  url: string
+}
+
+/** Node for use inside an `@graph`, so it carries no `@context` of its own. */
+export function buildTechArticle({ headline, description, url }: TechArticleInput) {
+  return {
+    '@type': 'TechArticle',
+    headline,
+    description,
+    url,
+    mainEntityOfPage: url,
+    inLanguage: 'de-DE',
+    author: {
+      '@type': 'Organization',
+      name: ORGANIZATION_NAME,
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: ORGANIZATION_NAME,
+      logo: {
+        '@type': 'ImageObject',
+        url: LOGO_URL,
+      },
+    },
+  }
+}
+
+/** Combines nodes into one `@graph` document with a single `@context`. */
+export function buildGraph(nodes: Record<string, unknown>[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': nodes,
+  }
+}
+
 export type BlogPostingInput = {
   title: string
   description: string

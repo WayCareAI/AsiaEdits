@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 
 const COMPARISON_ROWS = [
@@ -48,7 +49,14 @@ export function ComparisonTableSection() {
           Die folgende Tabelle stellt die entscheidenden
           Leistungskriterien beider Systeme gegenüber &ndash; von der
           Ladegeschwindigkeit über die Sicherheitslage bis zum
-          transparenten Preismodell.
+          transparenten Preismodell. Die Messwerte im Detail findest Du im{' '}
+          <Link
+            href="/wordpress-alternative-vergleich"
+            className="text-primary underline underline-offset-4 hover:text-primary/80"
+          >
+            Ladezeiten- &amp; Performance-Report 2026
+          </Link>
+          .
         </p>
 
         <div className="mt-8 w-full max-w-full overflow-x-auto rounded-2xl border border-border">
