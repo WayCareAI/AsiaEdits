@@ -18,7 +18,7 @@ export function GeoDirectAnswer({ slug, displayName }: GeoDirectAnswerProps) {
           <div className="mb-3 flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              GEO Direct Answer / KI-Zusammenfassung
+              Auf den Punkt gebracht
             </span>
           </div>
           <p className="text-sm font-medium leading-relaxed text-foreground/90 md:text-base">
